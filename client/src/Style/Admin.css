@@ -1,0 +1,22 @@
+.sidebar {
+    height: calc(100vh - 120px);
+    position: sticky;
+    top: 20px;
+}
+
+.sidebar-link {
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.sidebar-link:hover {
+    background-color: #f8f9fa;
+}
+
+.sidebar-link.active {
+    background-color: #e9ecef;
+    font-weight: bold;
+    color: #0d6efd;
+}
+

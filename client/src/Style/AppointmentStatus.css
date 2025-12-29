@@ -1,0 +1,118 @@
+/* Animations */
+@keyframes pulse {
+  0%, 100% { 
+    opacity: 1; 
+  }
+  50% { 
+    opacity: 0.5; 
+  }
+}
+
+@keyframes ping {
+  0% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+  75%, 100% { 
+    transform: scale(1.5); 
+    opacity: 0; 
+  }
+}
+
+/* Step Card Styles */
+.step-card {
+  transition: all 0.3s ease;
+  position: relative;
+  height: 100%;
+}
+
+.step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Step Number */
+.step-number {
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: #6c757d;
+  z-index: 1;
+}
+
+/* Status Indicators */
+.status-indicator {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.current-indicator {
+  background: #007bff;
+  animation: ping 2s infinite;
+}
+
+.completed-indicator {
+  background: #28a745;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon Container */
+.icon-container {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px;
+  transition: all 0.3s ease;
+}
+
+/* Header Gradient */
+.header-gradient {
+  background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%);
+}
+
+/* Progress Container */
+.progress-container {
+  background: #f8f9fa;
+  padding: 15px 20px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Info Items */
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
+.info-icon {
+  margin-right: 8px;
+  opacity: 0.8;
+}

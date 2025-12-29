@@ -1,0 +1,164 @@
+/* Style/Nav.css */
+.navbar {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.heart-logo {
+  width: 45px;
+  height: 45px;
+  background-color: #00d4ff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 12px;
+  padding: 8px 0px;
+}
+
+.heart-logo span {
+  transform: rotate(45deg);
+  font-size: 1.rem;
+  color: white !important;
+}
+
+/* Default black text for all nav items */
+.nav, .drop-item .nav-link {
+  padding: 10px 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  color: #212529 !important; /* Default black color */
+  font-weight: normal; /* Normal weight by default */
+}
+
+/* Special padding for Chuyên khoa và Dịch vụ dropdowns */
+#basic-nav-dropdown {
+  padding: 8px !important;
+}
+
+/* Change color on hover */
+.nav:hover, .drop-item:hover .nav-link {
+  color: #0d6efd !important; /* Blue on hover */
+  font-weight: 500 !important; /* Medium weight on hover */
+}
+
+/* Active page style - blue and bold for normal nav items */
+.nav.active {
+  color: #0d6efd !important;
+  font-weight: 700 !important;
+}
+
+/* Special handling for dropdown items (Chuyên khoa & Dịch vụ) */
+.drop-item.active .nav-link {
+  color: #0d6efd !important;
+  /* No font-weight change for dropdown titles */
+}
+
+/* Indicator styles */
+.nav-indicator {
+  position: absolute;
+  bottom: 0;
+  height: 3px;
+  background-color: #0d6efd;
+  transition: all 0.3s ease;
+  opacity: 0;
+  border-radius: 2px;
+}
+
+/* Always show indicator for active pages */
+.nav.active ~ .nav-indicator,
+.drop-item.active ~ .nav-indicator {
+  opacity: 1;
+}
+
+.drop-item {
+  position: relative;
+}
+
+.drop-item .dropdown-menu {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+  margin-top: 0;
+  border: none;
+  padding: 0.5rem 0;
+}
+
+.drop-item .dropdown-menu {
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+}
+
+.drop-item .dropdown-item {
+  color: #333;
+  transition: all 0.2s;
+  padding: 0.5rem 1.5rem;
+}
+
+.drop-item .dropdown-item:hover {
+  background-color: #e3f1fc;
+  color: #0d6efd;
+}
+
+/* Applied special style for active dropdown item */
+.drop-item .dropdown-item.active {
+  background-color: #e3f1fc;
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+#basic-nav-dropdown.dropdown-toggle.nav-link::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Fixed login button with better contrast */
+.btn-login {
+  background-color: #8eebff !important;
+  color: black !important;
+  border-radius: 50px;
+  padding: 8px 20px !important;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2); /* Text shadow for better readability */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Box shadow for better distinction */
+}
+
+.btn-login:hover {
+  background-color: #0b5ed7 !important;
+  color: white !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 991px) {
+  .nav-indicator {
+    display: none;
+  }
+  
+  .drop-item {
+    padding-left: 16px;
+  }
+.btn-login {
+    margin-top: 10px;
+    text-align: center;
+    max-width: 200px; /* Limit width on mobile */
+  }
+}
+
+.multi-column-dropdown {
+  display: flex;
+  flex-wrap: nowrap;
+  padding: 10px 15px;
+  min-width: 1000px;
+  max-width: 1500px;
+  max-height: unset; /* ❗ Bỏ giới hạn chiều cao */
+  gap: 30px;
+}
+
+.dropdown-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 400px;
+}

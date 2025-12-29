@@ -1,0 +1,81 @@
+.reviews-container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.reviews-container .form-select {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.2s ease-in-out;
+}
+
+.reviews-container .form-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.doctors-section h5 {
+  color: #007bff;
+  font-size: 1.5rem;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
+}
+
+.doctor-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.doctor-image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border: 2px solid #e9ecef;
+}
+
+.detail-button {
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.detail-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.text-primary {
+  color: #007bff !important;
+}
+
+.text-warning {
+  color: #ffc107 !important;
+}
+
+@media (max-width: 768px) {
+  .doctor-image {
+    width: 60px;
+    height: 60px;
+  }
+
+  .detail-button {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .doctors-section h5 {
+    font-size: 1.25rem;
+  }
+}

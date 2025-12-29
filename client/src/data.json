@@ -1,0 +1,11 @@
+    {
+        "student_id": "SV001",
+        "name": "Nguyen Van A",
+        "age": 20,
+        "major": "Computer Science",
+        "grades": {
+            "Math": 8.5,
+            "Physics": 7.0,
+            "Programming": 9.0
+        }
+    }

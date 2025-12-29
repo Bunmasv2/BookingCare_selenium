@@ -1,0 +1,70 @@
+.doctor-card {
+  width: 17rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: none;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-img {
+  width: 120px !important;
+  height: 120px !important;
+  object-fit: cover;
+  border-radius: 50% !important;
+  border: 2px solid #0d6efd;
+}
+
+.doctor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.doctor-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+  background-color: #fff;
+}
+
+.doctor-card:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.doctor-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.doctor-card h6 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.doctor-card p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.degree {
+  font-style: italic;
+  color: #666;
+}
+
+/* Responsive tối ưu hơn cho mobile */
+@media (max-width: 768px) {
+  .doctor-grid {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .doctor-grid {
+      grid-template-columns: 1fr;
+  }
+}
