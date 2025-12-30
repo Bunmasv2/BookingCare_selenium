@@ -28,7 +28,9 @@ namespace server.DTO
         [Phone(ErrorMessage = "Số điện thoại chỉ bao gồm chữ số!")]
         public string? phone { get; set; }
 
-         [Required(ErrorMessage = "Mã OTP không được để trống!")]
+        // OTP DISABLED FOR SELENIUM TESTING - Start
+        // [Required(ErrorMessage = "Mã OTP không được để trống!")]
+        // OTP DISABLED FOR SELENIUM TESTING - End
         public string? otp { get; set; }
     }
 }

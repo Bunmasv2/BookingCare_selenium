@@ -1,5 +1,9 @@
-import React, { useContext, useEffect, useState, useRef } from 'react';
-import { Button, InputGroup, Modal, Form } from 'react-bootstrap';
+import React, { useContext, useState } from 'react';
+// OTP DISABLED FOR SELENIUM TESTING - Commented imports
+// import React, { useContext, useEffect, useState, useRef } from 'react';
+import { Button, InputGroup, Form } from 'react-bootstrap';
+// OTP DISABLED - Modal no longer needed
+// import { Button, InputGroup, Modal, Form } from 'react-bootstrap';
 import { ValideFormContext} from '../../Context/ValideFormContext';
 import axios from '../../Util/AxiosConfig';
 
@@ -8,95 +12,100 @@ function SignUp({ setIsLogin, onSuccessfulSignup }) {
     const [registerData, setRegisterData] = useState({
         fullname: "", phone: "", email: "", signup_password: "", passwordConfirmed: ""
     });
-    const [otpInputs, setOtpInputs] = useState(["", "", "", "", "", ""]);
-    const [showOtpModal, setShowOtpModal] = useState(false);
+    // OTP DISABLED FOR SELENIUM TESTING - Start
+    // const [otpInputs, setOtpInputs] = useState(["", "", "", "", "", ""]);
+    // const [showOtpModal, setShowOtpModal] = useState(false);
+    // OTP DISABLED FOR SELENIUM TESTING - End
     const [loading, setLoading] = useState(false);
     const [showPasswords, setShowPasswords] = useState(false);
-    const [resendCooldown, setResendCooldown] = useState(0);
-    const [otpCountdown, setOtpCountdown] = useState("");
-    const [lastEmailUsed, setLastEmailUsed] = useState("");
-    const [otpSent, setOtpSent] = useState(false);
-    const [isRegistering, setIsRegistering] = useState(false); // Thêm flag để tránh call API nhiều lần
+    // OTP DISABLED FOR SELENIUM TESTING - Start
+    // const [resendCooldown, setResendCooldown] = useState(0);
+    // const [otpCountdown, setOtpCountdown] = useState("");
+    // const [lastEmailUsed, setLastEmailUsed] = useState("");
+    // const [otpSent, setOtpSent] = useState(false);
+    // const [isRegistering, setIsRegistering] = useState(false); // Thêm flag để tránh call API nhiều lần
     
-    const otpRefs = useRef([...Array(6)].map(() => React.createRef()));
+    // const otpRefs = useRef([...Array(6)].map(() => React.createRef()));
 
-    useEffect(() => {
-        let timer;
-        if (resendCooldown > 0) {
-            timer = setInterval(() => {
-                setResendCooldown(prev => {
-                    if (prev <= 1) {
-                        clearInterval(timer);
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [resendCooldown]);
-
-    useEffect(() => {
-        if (resendCooldown > 0) {
-            const minutes = Math.floor(resendCooldown / 60);
-            const seconds = resendCooldown % 60;
-            setOtpCountdown(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
-        } else {
-            setOtpCountdown("");
-        }
-    }, [resendCooldown]);
-
-    useEffect(() => {
-        if (showOtpModal) {
-            const normalizedEmail = registerData?.email.trim().toLowerCase();
-            if (normalizedEmail !== lastEmailUsed || !otpSent) {
-                handleSendOtp();
-            }
-        }
-    }, [showOtpModal]);
-
-    // XÓA useEffect cũ và thay thế bằng function riêng biệt
     // useEffect(() => {
-    //     const register = async () => {
-    //         if (!isValidOtp || !showOtpModal) return;
-            
-    //         try {
-    //             setLoading(true);
-    //             const otp = otpInputs.join("");
-    //             const payload = { ...registerData, otp };
-    //             await axios.post("/auth/register", payload);
-                
-    //             setShowOtpModal(false);
-                
-    //             // Gọi callback để truyền dữ liệu sang SignIn
-    //             if (onSuccessfulSignup) {
-    //                 onSuccessfulSignup(registerData);
-    //             } else {
-    //                 setIsLogin(true);
-    //             }
-    //             setIsValidOtp(false);
-    //             setOtpInputs(["", "", "", "", "", ""]);
-    //         } catch (error) {
-    //             console.log(error)
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     register();
-    // }, [isValidOtp, showOtpModal, registerData, onSuccessfulSignup, setIsLogin, otpInputs]);
+    //     let timer;
+    //     if (resendCooldown > 0) {
+    //         timer = setInterval(() => {
+    //             setResendCooldown(prev => {
+    //                 if (prev <= 1) {
+    //                     clearInterval(timer);
+    //                     return 0;
+    //                 }
+    //                 return prev - 1;
+    //             });
+    //         }, 1000);
+    //     }
+    //     return () => clearInterval(timer);
+    // }, [resendCooldown]);
 
-    useEffect(() => {
-        if (showOtpModal) {
-            setTimeout(() => {
-                otpRefs.current[0]?.current?.focus();
-            }, 100);
-        }
-    }, [showOtpModal]);
+    // useEffect(() => {
+    //     if (resendCooldown > 0) {
+    //         const minutes = Math.floor(resendCooldown / 60);
+    //         const seconds = resendCooldown % 60;
+    //         setOtpCountdown(`${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+    //     } else {
+    //         setOtpCountdown("");
+    //     }
+    // }, [resendCooldown]);
+
+    // useEffect(() => {
+    //     if (showOtpModal) {
+    //         const normalizedEmail = registerData?.email.trim().toLowerCase();
+    //         if (normalizedEmail !== lastEmailUsed || !otpSent) {
+    //             handleSendOtp();
+    //         }
+    //     }
+    // }, [showOtpModal]);
+
+    // // XÓA useEffect cũ và thay thế bằng function riêng biệt
+    // // useEffect(() => {
+    // //     const register = async () => {
+    // //         if (!isValidOtp || !showOtpModal) return;
+            
+    // //         try {
+    // //             setLoading(true);
+    // //             const otp = otpInputs.join("");
+    // //             const payload = { ...registerData, otp };
+    // //             await axios.post("/auth/register", payload);
+                
+    // //             setShowOtpModal(false);
+                
+    // //             // Gọi callback để truyền dữ liệu sang SignIn
+    // //             if (onSuccessfulSignup) {
+    // //                 onSuccessfulSignup(registerData);
+    // //             } else {
+    // //                 setIsLogin(true);
+    // //             }
+    // //             setIsValidOtp(false);
+    // //             setOtpInputs(["", "", "", "", "", ""]);
+    // //         } catch (error) {
+    // //             console.log(error)
+    // //         } finally {
+    // //             setLoading(false);
+    // //         }
+    // //     };
+    // //     register();
+    // // }, [isValidOtp, showOtpModal, registerData, onSuccessfulSignup, setIsLogin, otpInputs]);
+
+    // useEffect(() => {
+    //     if (showOtpModal) {
+    //         setTimeout(() => {
+    //             otpRefs.current[0]?.current?.focus();
+    //         }, 100);
+    //     }
+    // }, [showOtpModal]);
+    // OTP DISABLED FOR SELENIUM TESTING - End
 
     const passwordsMatch = () => {
         return registerData.signup_password === registerData.passwordConfirmed && registerData.signup_password !== "";
     };
 
+    // OTP DISABLED - Direct registration without OTP
     const handleRegister = async (e) => {
         e.preventDefault();
         const errors = validateForm(registerData);
@@ -106,52 +115,11 @@ function SignUp({ setIsLogin, onSuccessfulSignup }) {
             return;
         }
 
-        setOtpInputs(["", "", "", "", "", ""]);
-        setOtpSent(false);
-        setIsRegistering(false); // Reset flag
-
-        const normalizedEmail = registerData.email.trim().toLowerCase();
-        if (normalizedEmail !== lastEmailUsed) {
-            setResendCooldown(0);
-        }
-
-        setShowOtpModal(true);
-    };
-
-    const handleSendOtp = async () => {
         try {
-            const normalizedEmail = registerData.email.trim().toLowerCase();
-            const emailChanged = normalizedEmail !== lastEmailUsed;
-
-            if (emailChanged || resendCooldown === 0) {
-                setLoading(true);
-                await axios.post("/auth/send-otp", { email: normalizedEmail });
-                setResendCooldown(60);
-                setLastEmailUsed(normalizedEmail);
-                setOtpSent(true);
-                // alert("Mã OTP đã được gửi đến email của bạn!");
-            } else {
-                // alert(`Mã OTP đã được gửi. Vui lòng đợi ${otpCountdown} để gửi lại.`);
-            }
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    // Tạo function riêng để handle việc đăng ký
-    const handleRegisterWithOtp = async () => {
-        if (isRegistering) return; // Tránh call API nhiều lần
-        
-        try {
-            setIsRegistering(true);
             setLoading(true);
-            const otp = otpInputs.join("");
-            const payload = { ...registerData, otp };
+            // OTP DISABLED - Send register request directly without OTP
+            const payload = { ...registerData, otp: "000000" }; // Dummy OTP for testing
             await axios.post("/auth/register", payload);
-            
-            setShowOtpModal(false);
             
             // Gọi callback để truyền dữ liệu sang SignIn
             if (onSuccessfulSignup) {
@@ -159,93 +127,171 @@ function SignUp({ setIsLogin, onSuccessfulSignup }) {
             } else {
                 setIsLogin(true);
             }
-            
-            // Reset tất cả state
-            setOtpInputs(["", "", "", "", "", ""]);
-            setIsRegistering(false);
         } catch (error) {
             console.log(error);
-            setIsRegistering(false);
-            // Có thể thêm thông báo lỗi cho user ở đây
         } finally {
             setLoading(false);
         }
     };
 
-    const handleConfirmOtp = () => {
-        const otp = otpInputs.join("");
-        if (otp.length !== 6) {
-            alert("Vui lòng nhập đủ 6 chữ số OTP.");
-            return;
-        }
+    // OTP DISABLED FOR SELENIUM TESTING - Start (Original handleRegister)
+    // const handleRegister = async (e) => {
+    //     e.preventDefault();
+    //     const errors = validateForm(registerData);
+    //     if (errors > 0) return;
+
+    //     if (!passwordsMatch()) {
+    //         return;
+    //     }
+
+    //     const normalizedEmail = registerData.email.trim().toLowerCase();
+    //     if (normalizedEmail !== lastEmailUsed) {
+    //         setResendCooldown(0);
+    //     }
+
+    //         setIsRegistering(true);
+    //         setLoading(true);
+    //         const payload = { ...registerData };
+    //         await axios.post("/auth/register", payload);             // Gọi callback để truyền dữ liệu sang SignIn
+    //         if (onSuccessfulSignup) {
+    //             onSuccessfulSignup(registerData);
+    //         } else {
+    //             setIsLogin(true);
+    //         }
+           
+    //         setIsRegistering(false);
+    // };
+
+    // const handleSendOtp = async () => {
+    //     try {
+    //         const normalizedEmail = registerData.email.trim().toLowerCase();
+    //         const emailChanged = normalizedEmail !== lastEmailUsed;
+
+    //         if (emailChanged || resendCooldown === 0) {
+    //             setLoading(true);
+    //             await axios.post("/auth/send-otp", { email: normalizedEmail });
+    //             setResendCooldown(60);
+    //             setLastEmailUsed(normalizedEmail);
+    //             setOtpSent(true);
+    //             // alert("Mã OTP đã được gửi đến email của bạn!");
+    //         } else {
+    //             // alert(`Mã OTP đã được gửi. Vui lòng đợi ${otpCountdown} để gửi lại.`);
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
+    // // Tạo function riêng để handle việc đăng ký
+    // const handleRegisterWithOtp = async () => {
+    //     if (isRegistering) return; // Tránh call API nhiều lần
         
-        // Gọi function đăng ký thay vì set state
-        handleRegisterWithOtp();
-    };
+    //     try {
+    //         setIsRegistering(true);
+    //         setLoading(true);
+    //         const otp = otpInputs.join("");
+    //         const payload = { ...registerData, otp };
+    //         await axios.post("/auth/register", payload);
+            
+    //         setShowOtpModal(false);
+            
+    //         // Gọi callback để truyền dữ liệu sang SignIn
+    //         if (onSuccessfulSignup) {
+    //             onSuccessfulSignup(registerData);
+    //         } else {
+    //             setIsLogin(true);
+    //         }
+            
+    //         // Reset tất cả state
+    //         setOtpInputs(["", "", "", "", "", ""]);
+    //         setIsRegistering(false);
+    //     } catch (error) {
+    //         console.log(error);
+    //         setIsRegistering(false);
+    //         // Có thể thêm thông báo lỗi cho user ở đây
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
-    const handleOtpInput = (e, index) => {
-        e.preventDefault();
-        const inputValue = e.nativeEvent.data;
+    // const handleConfirmOtp = () => {
+    //     const otp = otpInputs.join("");
+    //     if (otp.length !== 6) {
+    //         alert("Vui lòng nhập đủ 6 chữ số OTP.");
+    //         return;
+    //     }
+        
+    //     // Gọi function đăng ký thay vì set state
+    //     handleRegisterWithOtp();
+    // };
 
-        if (inputValue && /^[0-9]$/.test(inputValue)) {
-            const newOtp = [...otpInputs];
-            newOtp[index] = inputValue;
-            setOtpInputs(newOtp);
+    // const handleOtpInput = (e, index) => {
+    //     e.preventDefault();
+    //     const inputValue = e.nativeEvent.data;
 
-            if (index < 5) {
-                otpRefs.current[index + 1]?.current?.focus();
-            }
-        }
-    };
+    //     if (inputValue && /^[0-9]$/.test(inputValue)) {
+    //         const newOtp = [...otpInputs];
+    //         newOtp[index] = inputValue;
+    //         setOtpInputs(newOtp);
 
-    const handleOtpKeyDown = (e, index) => {
-        if (e.key === "Backspace") {
-            if (otpInputs[index]) {
-                const newOtp = [...otpInputs];
-                newOtp[index] = "";
-                setOtpInputs(newOtp);
-            } else if (index > 0) {
-                otpRefs.current[index - 1]?.current?.focus();
-            }
-        } else if (e.key === "ArrowLeft" && index > 0) {
-            otpRefs.current[index - 1]?.current?.focus();
-        } else if (e.key === "ArrowRight" && index < 5) {
-            otpRefs.current[index + 1]?.current?.focus();
-        }
-    };
+    //         if (index < 5) {
+    //             otpRefs.current[index + 1]?.current?.focus();
+    //         }
+    //     }
+    // };
 
-    const handleOtpPaste = (e) => {
-        e.preventDefault();
-        const pastedData = e.clipboardData.getData('text');
-        const pastedOtp = pastedData.replace(/\D/g, '').slice(0, 6);
+    // const handleOtpKeyDown = (e, index) => {
+    //     if (e.key === "Backspace") {
+    //         if (otpInputs[index]) {
+    //             const newOtp = [...otpInputs];
+    //             newOtp[index] = "";
+    //             setOtpInputs(newOtp);
+    //         } else if (index > 0) {
+    //             otpRefs.current[index - 1]?.current?.focus();
+    //         }
+    //     } else if (e.key === "ArrowLeft" && index > 0) {
+    //         otpRefs.current[index - 1]?.current?.focus();
+    //     } else if (e.key === "ArrowRight" && index < 5) {
+    //         otpRefs.current[index + 1]?.current?.focus();
+    //     }
+    // };
 
-        if (pastedOtp) {
-            const newOtp = [...otpInputs];
-            for (let i = 0; i < pastedOtp.length; i++) {
-                if (i < 6) newOtp[i] = pastedOtp[i];
-            }
-            setOtpInputs(newOtp);
+    // const handleOtpPaste = (e) => {
+    //     e.preventDefault();
+    //     const pastedData = e.clipboardData.getData('text');
+    //     const pastedOtp = pastedData.replace(/\D/g, '').slice(0, 6);
 
-            if (pastedOtp.length < 6) {
-                otpRefs.current[Math.min(pastedOtp.length, 5)]?.current?.focus();
-            }
-        }
-    };
+    //     if (pastedOtp) {
+    //         const newOtp = [...otpInputs];
+    //         for (let i = 0; i < pastedOtp.length; i++) {
+    //             if (i < 6) newOtp[i] = pastedOtp[i];
+    //         }
+    //         setOtpInputs(newOtp);
 
-    const handleOtpClick = (index) => {
-        otpRefs.current[index]?.current?.focus();
-    };
+    //         if (pastedOtp.length < 6) {
+    //             otpRefs.current[Math.min(pastedOtp.length, 5)]?.current?.focus();
+    //         }
+    //     }
+    // };
 
-    const handleEmailChange = (e) => {
-        setRegisterData({ ...registerData, email: e.target.value });
-    };
+    // const handleOtpClick = (index) => {
+    //     otpRefs.current[index]?.current?.focus();
+    // };
 
-    const handleCloseOtpModal = () => {
-        setShowOtpModal(false);
-        setOtpInputs(["", "", "", "", "", ""]);
-        setIsRegistering(false); // Reset flag khi đóng modal
-    };
+    // const handleEmailChange = (e) => {
+    //     setRegisterData({ ...registerData, email: e.target.value });
+    // };
 
+    // const handleCloseOtpModal = () => {
+    //     setShowOtpModal(false);
+    //     setOtpInputs(["", "", "", "", "", ""]);
+    //     setIsRegistering(false); // Reset flag khi đóng modal
+    // };
+    // OTP DISABLED FOR SELENIUM TESTING - End
+
+    // OTP DISABLED - passwordMatchError still needed
     const passwordMatchError = !passwordsMatch() && registerData.passwordConfirmed !== "" 
         ? "Mật khẩu xác nhận không khớp với mật khẩu đã nhập" 
         : null;
@@ -339,7 +385,7 @@ function SignUp({ setIsLogin, onSuccessfulSignup }) {
                     </label>
                 </div>
 
-                <Button variant="primary" type="submit" disabled={loading}>
+                <Button variant="primary" type="submit" disabled={loading}  onClick={handleRegister}>
                     {loading ? "Đang xử lý..." : "Đăng Ký"}
                 </Button>
             </Form>
@@ -348,14 +394,16 @@ function SignUp({ setIsLogin, onSuccessfulSignup }) {
                 Đã có tài khoản?{" "}
                 <Button variant="link" onClick={() => {
                     setIsLogin(true);
-                    setShowOtpModal(false);
-                    setOtpInputs(["", "", "", "", "", ""]);
-                    setIsRegistering(false); // Reset flag
+                    // OTP DISABLED FOR SELENIUM TESTING
+                    // setShowOtpModal(false);
+                    // setOtpInputs(["", "", "", "", "", ""]);
+                    // setIsRegistering(false); // Reset flag
                 }}>
                     Đăng nhập
                 </Button>
             </p>
 
+            {/* OTP DISABLED FOR SELENIUM TESTING - Modal commented out
             <Modal show={showOtpModal} onHide={handleCloseOtpModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Nhập Mã OTP</Modal.Title>
@@ -382,7 +430,7 @@ function SignUp({ setIsLogin, onSuccessfulSignup }) {
                                 onClick={() => handleOtpClick(index)}
                                 autoComplete="off"
                                 style={{ width: "40px", textAlign: "center", fontSize: "1.5rem" }}
-                                disabled={isRegistering} // Disable input khi đang xử lý
+                                disabled={isRegistering}
                             />
                         ))}
                         </div>
@@ -406,6 +454,7 @@ function SignUp({ setIsLogin, onSuccessfulSignup }) {
                     </div>
                 </Modal.Footer>
             </Modal>
+            OTP DISABLED FOR SELENIUM TESTING - End */}
         </>
     );
 }
