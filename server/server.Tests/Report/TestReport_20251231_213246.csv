@@ -1,0 +1,7 @@
+﻿Test Case Name;Input Data;Expected Result;Actual Result;Status
+Check Empty Email;Email: '';Email Is Required!;Email Is Required!;PASS
+Check Invalid Email Format;Email: 'invalid-email';Vui lòng nhập đúng định dạng!;Vui lòng nhập đúng định dạng!;PASS
+Check Empty Password;Email: 'test@gmail.com';Password Is Required!;Password Is Required!;PASS
+Check Login Success;Email: r.rhm@gmail.com;Đăng nhập thành công! | Role: Doctor;Đăng nhập thành công! | Pass: True;PASS
+Check User Not Exist;Email: notfound@gmail.com;Tài khoản không tồn tại!;Tài khoản không tồn tại!;PASS
+Check Wrong Password;Email: r.rhm@gmail.com, Pass: WrongPassword;Sai mật khẩu!;Sai mật khẩu!;PASS

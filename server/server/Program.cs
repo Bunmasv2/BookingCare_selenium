@@ -18,8 +18,22 @@ using server.Services.RatingRepository;
 
 Env.Load();
 
+string db_server = Environment.GetEnvironmentVariable("DATABASE_SERVER");
+// string db_port = Environment.GetEnvironmentVariable("DATABASE_PORT");
+string db_name = Environment.GetEnvironmentVariable("DATABASE_NAME");
+// string user_id = Environment.GetEnvironmentVariable("USER_ID");
+// string db_password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+string trusted = Environment.GetEnvironmentVariable("TRUSTED_CONNECTION") ?? "True";
+string mars = Environment.GetEnvironmentVariable("MULTIPLEACTIVE_RESULTSETS") ?? "True";
+
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+string connectionString =
+    $"Server={db_server};Database={db_name};Trusted_Connection={trusted};" +
+    $"MultipleActiveResultSets={mars};TrustServerCertificate=True;";
+
+builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
+
 
 builder.Services.AddCorsPolicy();
 
@@ -42,7 +56,7 @@ builder.Services.AddOptions<MomoOptionModel>()
     .Bind(builder.Configuration.GetSection("MomoAPI"))
     .ValidateDataAnnotations()
     .ValidateOnStart();
-    
+
 builder.Services.AddDbContext<ClinicManagementContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
         sqlOptions.EnableRetryOnFailure(

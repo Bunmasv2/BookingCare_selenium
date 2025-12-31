@@ -1,0 +1,7 @@
+﻿Test Case Name;Input Data;Expected Result (JSON);Actual Result (JSON);Status
+Controller Login Success;Valid User;{"message":"\u0110\u0103ng nh\u1EADp th\u00E0nh c\u00F4ng!","userName":"abc","role":"Doctor"};{"message":"\u0110\u0103ng nh\u1EADp th\u00E0nh c\u00F4ng!","userName":"abc","role":"Doctor"};PASS
+Controller User Not Found;Email: notfound@gmail.com;{"StatusCode":400,"ErrorMessage":"T\u00E0i kho\u1EA3n kh\u00F4ng t\u1ED3n t\u1EA1i!"};{"StatusCode":400,"ErrorMessage":"T\u00E0i kho\u1EA3n kh\u00F4ng t\u1ED3n t\u1EA1i!"};PASS
+Controller Wrong Password;Pass: WrongPassword;{"StatusCode":400,"ErrorMessage":"Sai m\u1EADt kh\u1EA9u!"};{"StatusCode":400,"ErrorMessage":"Sai m\u1EADt kh\u1EA9u!"};PASS
+Validate Empty Email;Email: '';{"ErrorMessage":"Email Is Required!"};{"ErrorMessage":"Email Is Required!"};PASS
+Validate Invalid Email;Email: 'invalid-email';{"ErrorMessage":"Vui l\u00F2ng nh\u1EADp \u0111\u00FAng \u0111\u1ECBnh d\u1EA1ng!"};{"ErrorMessage":"Vui l\u00F2ng nh\u1EADp \u0111\u00FAng \u0111\u1ECBnh d\u1EA1ng!"};PASS
+Validate Empty Password;Pass: '';{"ErrorMessage":"Password Is Required!"};{"ErrorMessage":"Password Is Required!"};PASS

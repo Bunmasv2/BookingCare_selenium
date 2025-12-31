@@ -1,0 +1,7 @@
+Test Case Name	Input Data	Expected Result (JSON)	Actual Result (JSON)	Status
+Controller Login Success	Valid User	"{""message"":""??ng nh?p thành công!"",""userName"":""abc"",""role"":""Doctor""}"	"{""message"":""??ng nh?p thành công!"",""userName"":""abc"",""role"":""Doctor""}"	PASS
+Controller User Not Found	Email: notfound@gmail.com	"{""StatusCode"":400,""ErrorMessage"":""Tài kho?n không t?n t?i!""}"	"{""StatusCode"":400,""ErrorMessage"":""Tài kho?n không t?n t?i!""}"	PASS
+Controller Wrong Password	Pass: WrongPassword	"{""StatusCode"":400,""ErrorMessage"":""Sai m?t kh?u!""}"	"{""StatusCode"":400,""ErrorMessage"":""Sai m?t kh?u!""}"	PASS
+Validate Empty Email	Email: ''	"{""ErrorMessage"":""Email Is Required!""}"	"{""ErrorMessage"":""Email Is Required!""}"	PASS
+Validate Invalid Email	Email: 'invalid-email'	"{""ErrorMessage"":""Vui lòng nh?p ?úng ??nh d?ng!""}"	"{""ErrorMessage"":""Vui lòng nh?p ?úng ??nh d?ng!""}"	PASS
+Validate Empty Password	Pass: ''	"{""ErrorMessage"":""Password Is Required!""}"	"{""ErrorMessage"":""Password Is Required!""}"	PASS

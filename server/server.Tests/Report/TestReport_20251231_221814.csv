@@ -1,0 +1,13 @@
+﻿Test Case Name;Input Data;Expected Result (JSON);Actual Result (JSON);Status
+Reg_Logic_EmailExists;Email: exist@gmail.com;{"StatusCode":400,"ErrorMessage":"Email đã tồn tại!"};{"StatusCode":400,"ErrorMessage":"Email đã tồn tại!"};PASS
+Reg_Logic_PhoneExists;Phone: 0987654321;{"StatusCode":400,"ErrorMessage":"Số điện thoại đã được sử dụng!"};{"StatusCode":400,"ErrorMessage":"Số điện thoại đã đượcđượclllllllllllllllllll!"};FAIL
+Reg_Logic_Success;Valid Input;{"message":"Đăng ký thành công!","user":"newuser@gmail.com"};{"message":"Đăng ký thành công!","user":"newuser@gmail.com"};PASS
+Reg_Val_EmailEmpty;Email: '';{"ErrorMessage":"Email không được để trống!"};{"ErrorMessage":"Email không được để trống!"};PASS
+Reg_Val_PassMismatch;Pass != Confirm;{"ErrorMessage":"mật khẩu xác nhận không khớp!"};{"ErrorMessage":"mật khẩu xác nhận không khớp!"};PASS
+Reg_Val_PassShort;Pass: '123';{"ErrorMessage":"mật khẩu đăng ký tối thiểu 6 ký tự!"};{"ErrorMessage":"mật khẩu đăng ký tối thiểu 6 ký tự!"};PASS
+Controller Login Success;Valid User;{"message":"Đăng nhập thành công!","userName":"abc","role":"Doctor"};{"message":"Đăng nhập thành công!","userName":"abc","role":"Doctor"};PASS
+Controller User Not Found;Email: notfound@gmail.com;{"StatusCode":400,"ErrorMessage":"Tài khoản không tồn tại!"};{"StatusCode":400,"ErrorMessage":"Tài khoản không tồn tại!"};PASS
+Controller Wrong Password;Pass: WrongPassword;{"StatusCode":400,"ErrorMessage":"Sai mật khẩu!"};{"StatusCode":400,"ErrorMessage":"Sai mật khẩu!"};PASS
+Validate Empty Email;Email: '';{"ErrorMessage":"Email Không được bỏ trống!"};{"ErrorMessage":"Email Is Required!"};FAIL
+Validate Invalid Email;Email: 'invalid-email';{"ErrorMessage":"Vui lòng nhập đúng định dạng!"};{"ErrorMessage":"Vui lòng nhập đúng định dạng!"};PASS
+Validate Empty Password;Pass: '';{"ErrorMessage":"Password Is Required!"};{"ErrorMessage":"Password Is Required!"};PASS
