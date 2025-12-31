@@ -18,15 +18,8 @@ using server.Services.RatingRepository;
 
 Env.Load();
 
-string db_server = Environment.GetEnvironmentVariable("DATABASE_SERVER");
-// string db_port = Environment.GetEnvironmentVariable("DATABASE_PORT");
-string db_name = Environment.GetEnvironmentVariable("DATABASE_NAME");
-string user_id = Environment.GetEnvironmentVariable("USER_ID");
-string db_password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
-
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration["ConnectionStrings:DefaultConnection"] = $"Server={db_server};Database={db_name};User Id={user_id};Password={db_password};TrustServerCertificate=True;Connect Timeout=180;";
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddCorsPolicy();
 
@@ -49,9 +42,7 @@ builder.Services.AddOptions<MomoOptionModel>()
     .Bind(builder.Configuration.GetSection("MomoAPI"))
     .ValidateDataAnnotations()
     .ValidateOnStart();
-
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+    
 builder.Services.AddDbContext<ClinicManagementContext>(options =>
     options.UseSqlServer(connectionString, sqlOptions =>
         sqlOptions.EnableRetryOnFailure(
