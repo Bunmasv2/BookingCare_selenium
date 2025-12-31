@@ -474,6 +474,7 @@ function DoctorShiftDetail({ onBack }) {
                                         <Button
                                             variant="primary"
                                             onClick={handleAddMedicine}
+                                            disabled={!currentMedicine.medicineId || !currentMedicine.dosage || !currentMedicine.frequencyPerDay || !currentMedicine.durationInDays}
                                         >
                                             <i className="bi bi-plus-circle me-1"></i> Thêm thuốc vào đơn
                                         </Button>
@@ -529,6 +530,7 @@ function DoctorShiftDetail({ onBack }) {
                         variant="primary"
                         onClick={handleSavePrescription}
                         data-testid="btn-save"
+                        disabled={selectedMedicines.length === 0 || !prescriptionInfo.diagnosis}
                     >
                         Lưu đơn thuốc
                     </Button>

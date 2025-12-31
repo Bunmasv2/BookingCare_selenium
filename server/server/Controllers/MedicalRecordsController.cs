@@ -63,6 +63,9 @@ namespace Clinic_Management.Controllers
                 throw new ErrorHandlingException(403, "Bạn không có quyền truy cập vào lịch hẹn này!");
             }
 
+            if (prescriptionRequest.Medicines.Any(m => m.Dosage == 0.ToString()))
+                throw new ErrorHandlingException(400, "Liều dùng không được bằng 0");
+
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
             int hour = now.Hour;

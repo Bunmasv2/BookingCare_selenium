@@ -114,9 +114,12 @@ public class PrescriptionTests : TestBase
         return text;
     }
 
-    private void FillValidPrescriptionForm()
+    [Test]
+    public void Cannot_Prescribe_When_Not_Today()
     {
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(15));
+        PerformLogin();
+
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
         var js = (IJavaScriptExecutor)driver;
 
         var diagnosis = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("diagnosis")));
@@ -168,34 +171,6 @@ public class PrescriptionTests : TestBase
         var notes = driver.FindElement(By.Id("prescriptionNotes"));
         notes.Clear();
         notes.SendKeys("Theo dõi triệu chứng, tái khám nếu không đỡ");
-    }
-
-    // [Test]
-    // public void Cannot_Prescribe_When_Not_Doctor()
-    // {
-    //     PerformLogin();
-
-    //     var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-
-    //     IWebElement submitBtn = wait.Until(ExpectedConditions.ElementIsVisible(
-    //         By.CssSelector("[data-testid='btn-save']")
-    //     ));
-
-    //     // ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView(true);", submitBtn);
-    //     submitBtn.Click();
-
-    //     var message = HandleAlert();
-    //     Assert.That(message.ToLower(), Does.Contain("quyền"));
-    // }
-
-    [Test]
-    public void Cannot_Prescribe_When_Not_Today()
-    {
-        PerformLogin();
-
-        FillValidPrescriptionForm();
-
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
         IWebElement submitBtn = wait.Until(ExpectedConditions.ElementIsVisible(
             By.CssSelector("[data-testid='btn-save']")
@@ -208,12 +183,62 @@ public class PrescriptionTests : TestBase
     }
 
     [Test]
-    public void Cannot_Prescribe_Outside_Time_Range()
+    public void Cannot_Prescribe_When_Medicine_Dosage_Is_Zero()
     {
         PerformLogin();
 
-        FillValidPrescriptionForm();
-        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
+        var js = (IJavaScriptExecutor)driver;
+
+        var diagnosis = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("diagnosis")));
+        diagnosis.Clear();
+        diagnosis.SendKeys("Cảm cúm thông thường");
+
+        var treatment = driver.FindElement(By.Id("treatment"));
+        treatment.Clear();
+        treatment.SendKeys("Nghỉ ngơi, uống đủ nước, dùng thuốc theo chỉ định");
+
+        var medicineSearch = driver.FindElement(By.Id("medicineSearch"));
+        medicineSearch.Clear();
+        medicineSearch.SendKeys("Para");
+
+        var firstSuggestion = wait.Until(ExpectedConditions.ElementIsVisible(
+            By.XPath("//div[contains(@class,'border-bottom') and contains(.,'Para')]")
+        ));
+
+        js.ExecuteScript("arguments[0].click();", firstSuggestion);
+
+        var dosage = driver.FindElement(By.Id("medicineDosage"));
+        dosage.Clear();
+        dosage.SendKeys("0");
+
+        var frequency = driver.FindElement(By.Id("medicineFrequency"));
+        frequency.Clear();
+        frequency.SendKeys("3");
+
+        var duration = driver.FindElement(By.Id("medicineDuration"));
+        duration.Clear();
+        duration.SendKeys("5");
+
+        var usage = driver.FindElement(By.Id("medicineUsage"));
+        usage.Clear();
+        usage.SendKeys("Uống sau khi ăn");
+
+        var addMedicineBtn = wait.Until(ExpectedConditions.ElementToBeClickable(
+            By.XPath("//button[contains(text(),'Thêm thuốc')]")
+        ));
+
+        js.ExecuteScript("arguments[0].scrollIntoView({block:'center'});", addMedicineBtn);
+        Thread.Sleep(200);
+        js.ExecuteScript("arguments[0].click();", addMedicineBtn);
+
+        wait.Until(ExpectedConditions.ElementIsVisible(
+            By.CssSelector(".list-group-item")
+        ));
+
+        var notes = driver.FindElement(By.Id("prescriptionNotes"));
+        notes.Clear();
+        notes.SendKeys("Theo dõi triệu chứng, tái khám nếu không đỡ");
 
         IWebElement submitBtn = wait.Until(ExpectedConditions.ElementIsVisible(
             By.CssSelector("[data-testid='btn-save']")
@@ -222,20 +247,8 @@ public class PrescriptionTests : TestBase
         submitBtn.Click();
 
         var message = HandleAlert();
-        Assert.That(message.ToLower(), Does.Contain("khung giờ"));
+        Assert.That(message.ToLower(), Does.Contain("bằng 0"));
     }
-
-    // [Test]
-    // public void Cannot_Prescribe_When_Doctor_Not_Owner()
-    // {
-    //     LoginAsDoctor();
-
-    //     FillValidPrescriptionForm();
-    //     driver.FindElement(By.CssSelector("button[type='submit']")).Click();
-
-    //     var message = HandleAlert();
-    //     Assert.That(message.ToLower(), Does.Contain("không có quyền"));
-    // }
 
     // [Test]
     // public void Doctor_Can_Prescribe_Successfully()
@@ -248,5 +261,4 @@ public class PrescriptionTests : TestBase
     //     var message = HandleAlert();
     //     Assert.That(message.ToLower(), Does.Contain("thành công"));
     // }
-
 }
