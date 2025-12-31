@@ -46,7 +46,7 @@ namespace Server.Tests.Helpers
 
         /// <summary>
         /// So sánh Expected và Actual để xác định Pass/Fail
-        /// Sử dụng logic: kiểm tra xem ActualOutput có chứa nội dung chính của ExpectedOutput không
+        /// Sử dụng logic: so sánh chính xác chuỗi đã chuẩn hóa hoặc kiểm tra chứa đầy đủ
         /// </summary>
         private static bool CompareExpectedActual(string expected, string actual)
         {
@@ -64,20 +64,41 @@ namespace Server.Tests.Helpers
                 .Replace(")", "")
                 .Trim();
 
-            // Kiểm tra nếu actual chứa các từ khóa chính từ expected
-            // Trích xuất từ khóa chính (bỏ qua phần mô tả thêm)
+            // So sánh chính xác (exact match)
+            if (normalizedExpected == normalizedActual)
+                return true;
+
+            // Kiểm tra actual có chứa đầy đủ expected không
+            if (normalizedActual.Contains(normalizedExpected))
+                return true;
+
+            // Kiểm tra expected có chứa đầy đủ actual không
+            if (normalizedExpected.Contains(normalizedActual))
+                return true;
+
+            // Nếu không match chính xác, kiểm tra theo từ khóa quan trọng
+            // Trích xuất tất cả từ khóa từ expected (loại bỏ các từ thông dụng)
+            var commonWords = new HashSet<string> { "vui", "lòng", "và", "là", "có", "được", "đến", "cho", "với" };
+            
             var expectedKeywords = normalizedExpected
                 .Split(new[] { ' ', ',', '.', '!' }, StringSplitOptions.RemoveEmptyEntries)
-                .Where(w => w.Length > 2)
-                .Take(5)
+                .Where(w => w.Length > 2 && !commonWords.Contains(w))
                 .ToList();
 
-            // Đếm số từ khóa trùng khớp
-            int matchCount = expectedKeywords.Count(kw => normalizedActual.Contains(kw));
-            double matchRatio = expectedKeywords.Count > 0 ? (double)matchCount / expectedKeywords.Count : 0;
+            var actualKeywords = normalizedActual
+                .Split(new[] { ' ', ',', '.', '!' }, StringSplitOptions.RemoveEmptyEntries)
+                .Where(w => w.Length > 2 && !commonWords.Contains(w))
+                .ToList();
 
-            // Nếu >50% từ khóa trùng -> Pass
-            return matchRatio >= 0.5;
+            // Tất cả từ khóa quan trọng của expected phải xuất hiện trong actual
+            if (expectedKeywords.Count == 0)
+                return false;
+
+            int matchCount = expectedKeywords.Count(kw => actualKeywords.Any(aw => aw.Contains(kw) || kw.Contains(aw)));
+            double matchRatio = (double)matchCount / expectedKeywords.Count;
+
+            // Yêu cầu 100% từ khóa quan trọng phải match
+            return matchRatio >= 1.0;
         }
 
         /// <summary>
