@@ -2,6 +2,8 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using NUnit.Framework;
+using System.ComponentModel;
+
 
 public class AppointmentTests : TestBase
 {
@@ -137,7 +139,7 @@ public class AppointmentTests : TestBase
         page.SelectDoctor("TRẦN HỮU LỢI");
 
         page.SelectTime("Sáng");
-        page.SelectDate("2025-12-30");
+        page.SelectDate("2026-01-02");
 
         page.Submit();
 
@@ -176,7 +178,7 @@ public class AppointmentTests : TestBase
         page.SelectDoctor("TRẦN HỮU LỢI");
 
         page.SelectService("Khám tổng quát");
-        page.SelectDate("2025-12-30");
+        page.SelectDate("2025-12-31");
 
         page.Submit();
 
@@ -230,7 +232,7 @@ public class AppointmentTests : TestBase
         var page = new AppointmentPage(driver);
 
         FillValidBaseForm(page);
-        page.SelectDate("2025-12-30");
+        page.SelectDate("2025-12-31");
 
         page.Submit();
 

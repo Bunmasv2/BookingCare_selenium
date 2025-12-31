@@ -90,14 +90,11 @@ function AppointmentStatistics({ tabActive }) {
           </select>
 
           <select value={year} onChange={(e) => setYear(Number(e.target.value))}>
-            {[...Array(5)].map((_, idx) => {
-              const y = new Date().getFullYear() - idx
-              return (
-                <option key={y} value={y}>
-                  Năm {y}
-                </option>
-              )
-            })}
+            {[2027, 2026, 2025, 2024, 2023, 2022, 2021].map((y) => (
+              <option key={y} value={y}>
+                Năm {y}
+              </option>
+            ))}
           </select>
         </Col>
       </Row>
