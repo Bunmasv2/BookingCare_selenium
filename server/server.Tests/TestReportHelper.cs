@@ -1,66 +1,81 @@
-using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
-namespace server.Tests
+namespace Server.Tests
 {
-    public class TestReportHelper
+    public class TestResultModel
     {
-        private static List<TestStepResult> _steps = new List<TestStepResult>();
+        public string TestCaseName { get; set; } = "";
+        public string InputData { get; set; } = "";
+        public string ExpectedResult { get; set; } = "";
+        public string ActualResult { get; set; } = "";
+        public string Status { get; set; } = "";
+    }
 
-        public class TestStepResult
-        {
-            public string TestCase { get; set; } = "";
-            public string Step { get; set; } = "";
-            public string Expected { get; set; } = "";
-            public string Actual { get; set; } = "";
-            public string Status { get; set; } = "";
-        }
+    public static class TestReport
+    {
+        private static List<TestResultModel> _results = new List<TestResultModel>();
 
-        public static void AddStep(string testCase, string step, string expected, string actual)
+        public static void AddResult(string testName, string input, string expected, string actual, bool isPass)
         {
-            _steps.Add(new TestStepResult
+            _results.Add(new TestResultModel
             {
-                TestCase = testCase,
-                Step = step,
-                Expected = expected,
-                Actual = actual,
-                Status = expected.Trim() == actual.Trim() ? "PASS" : "FAIL"
+                TestCaseName = testName,
+                InputData = input,
+                ExpectedResult = expected,
+                ActualResult = actual,
+                Status = isPass ? "PASS" : "FAIL"
             });
         }
 
-        public static void ExportToExcel(string filePath)
+        public static void ExportToExcel()
         {
-            using (var workbook = new XLWorkbook())
+            try 
             {
-                var worksheet = workbook.Worksheets.Add("WhiteBox_Signin_Results");
+                var currentDir = Directory.GetCurrentDirectory();
+                var projectDirInfo = Directory.GetParent(currentDir)?.Parent?.Parent;
+                if (projectDirInfo == null) projectDirInfo = new DirectoryInfo(currentDir);
+
+                var reportDir = Path.Combine(projectDirInfo.FullName, "Report");
+                if (!Directory.Exists(reportDir)) Directory.CreateDirectory(reportDir);
+
+                // Tên file theo ngày giờ
+                var fileName = $"TestReport_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+                var filePath = Path.Combine(reportDir, fileName);
+
+                var csvContent = new StringBuilder();
+
+                // [FIX QUAN TRỌNG] Chỉ ghi Header nếu file CHƯA tồn tại
+                if (!File.Exists(filePath))
+                {
+                    csvContent.AppendLine("Test Case Name;Input Data;Expected Result (JSON);Actual Result (JSON);Status");
+                }
+
+                foreach (var item in _results)
+                {
+                    string actualRaw = item.ActualResult ?? "null";
+                    string expectedRaw = item.ExpectedResult ?? "null";
+                    string inputRaw = item.InputData ?? "";
+
+                    string actualSanitized = actualRaw.Replace(";", ",").Replace("\n", " ").Replace("\r", "");
+                    string expectedSanitized = expectedRaw.Replace(";", ",").Replace("\n", " ").Replace("\r", "");
+                    string inputSanitized = inputRaw.Replace(";", ",").Replace("\n", " ").Replace("\r", "");
+                    string testNameSanitized = item.TestCaseName.Replace(";", ",");
+
+                    csvContent.AppendLine($"{testNameSanitized};{inputSanitized};{expectedSanitized};{actualSanitized};{item.Status}");
+                }
+
+                // [FIX QUAN TRỌNG] Dùng AppendAllText thay vì WriteAllText
+                File.AppendAllText(filePath, csvContent.ToString(), new UTF8Encoding(true));
                 
-                // Tiêu đề cột
-                var headers = new string[] { "Test Case", "Step Description", "Expected Result", "Actual Result", "Status" };
-                for (int i = 0; i < headers.Length; i++)
-                {
-                    worksheet.Cell(1, i + 1).Value = headers[i];
-                    worksheet.Cell(1, i + 1).Style.Font.Bold = true;
-                    worksheet.Cell(1, i + 1).Style.Fill.BackgroundColor = XLColor.LightGray;
-                }
-
-                for (int i = 0; i < _steps.Count; i++)
-                {
-                    int row = i + 2;
-                    worksheet.Cell(row, 1).Value = _steps[i].TestCase;
-                    worksheet.Cell(row, 2).Value = _steps[i].Step;
-                    worksheet.Cell(row, 3).Value = _steps[i].Expected;
-                    worksheet.Cell(row, 4).Value = _steps[i].Actual;
-                    worksheet.Cell(row, 5).Value = _steps[i].Status;
-
-                    if (_steps[i].Status == "PASS")
-                        worksheet.Cell(row, 5).Style.Font.FontColor = XLColor.Green;
-                    else
-                        worksheet.Cell(row, 5).Style.Font.FontColor = XLColor.Red;
-                }
-
-                worksheet.Columns().AdjustToContents();
-                workbook.SaveAs(filePath);
+                Console.WriteLine($"✅ Report appended successfully to: {filePath}");
+                _results.Clear();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error exporting report: {ex.Message}");
             }
         }
     }
