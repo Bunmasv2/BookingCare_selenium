@@ -34,6 +34,7 @@ string connectionString =
 
 builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
 
+
 builder.Services.AddCorsPolicy();
 
 // Add services to the container.
