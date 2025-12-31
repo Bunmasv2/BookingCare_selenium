@@ -369,7 +369,10 @@ namespace Server.Tests.Controllers
                 Assert.That(exception.ErrorMessage, Is.EqualTo("Vui lòng chọn bác sĩ"));
                 Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
 
-                actualOutput = "Vui lòng chọn bác sĩ";
+                actualOutput = exception.ErrorMessage ?? "";
+                Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
+
+                // Test assertion chỉ kiểm tra có exception với status 400
                 isPassed = true;
             }
             catch (Exception ex)
@@ -417,7 +420,10 @@ namespace Server.Tests.Controllers
                 Assert.That(exception.ErrorMessage, Is.EqualTo("Vui lòng chọn dịch vụ"));
                 Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
 
-                actualOutput = "Vui lòng chọn dịch vụ";
+                actualOutput = exception.ErrorMessage ?? "";
+                Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
+
+                // Test assertion chỉ kiểm tra có exception với status 400
                 isPassed = true;
             }
             catch (Exception ex)
@@ -465,7 +471,10 @@ namespace Server.Tests.Controllers
                 Assert.That(exception.ErrorMessage, Is.EqualTo("Vui lòng chọn ngày khám"));
                 Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
 
-                actualOutput = "Vui lòng chọn ngày khám";
+                actualOutput = exception.ErrorMessage ?? "";
+                Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
+
+                // Test assertion chỉ kiểm tra có exception với status 400
                 isPassed = true;
             }
             catch (Exception ex)
@@ -524,7 +533,10 @@ namespace Server.Tests.Controllers
                 Assert.That(exception.ErrorMessage, Does.Contain("tối thiểu trước 1 ngày"));
                 Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
 
-                actualOutput = "Vui lòng đặt lịch khám tối thiểu trước 1 ngày";
+                actualOutput = exception.ErrorMessage ?? "";
+                Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
+
+                // Test assertion chỉ kiểm tra có exception với status 400
                 isPassed = true;
             }
             catch (Exception ex)
@@ -572,7 +584,10 @@ namespace Server.Tests.Controllers
                 Assert.That(exception.ErrorMessage, Is.EqualTo("Vui lòng chọn buổi khám"));
                 Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
 
-                actualOutput = "Vui lòng chọn buổi khám";
+                actualOutput = exception.ErrorMessage ?? "";
+                Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
+
+                // Test assertion chỉ kiểm tra có exception với status 400
                 isPassed = true;
             }
             catch (Exception ex)
@@ -642,7 +657,10 @@ namespace Server.Tests.Controllers
                 Assert.That(exception.ErrorMessage, Does.Contain("Bạn chưa hoàn thành lịch hẹn"));
                 Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
 
-                actualOutput = "Bạn chưa hoàn thành lịch hẹn trước đó";
+                actualOutput = exception.ErrorMessage ?? "";
+                Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
+
+                // Test assertion chỉ kiểm tra có exception với status 400
                 isPassed = true;
             }
             catch (Exception ex)
@@ -690,7 +708,10 @@ namespace Server.Tests.Controllers
                 Assert.That(exception.ErrorMessage, Is.EqualTo("Triệu chứng quá dài"));
                 Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
 
-                actualOutput = "Triệu chứng quá dài";
+                actualOutput = exception.ErrorMessage ?? "";
+                Console.WriteLine($"   ✅ Exception thrown: '{exception.ErrorMessage}' (Status: 400)");
+
+                // Test assertion chỉ kiểm tra có exception với status 400
                 isPassed = true;
             }
             catch (Exception ex)
