@@ -203,6 +203,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Branch Coverage", // Phủ nhánh: Kiểm tra nhánh appointment == null
                     preCondition,
                     new { appointmentId = 999, prescriptionRequest = "ValidPrescriptionRequest" },
                     expectedStatusCode,
@@ -315,6 +316,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Condition Coverage", // Phủ điều kiện: appointmentDate != today (ngày tương lai)
                     preCondition,
                     new { appointmentId = 501, appointmentDate = DateTime.Now.Date.AddDays(5).ToString("yyyy-MM-dd") },
                     expectedStatusCode,
@@ -428,6 +430,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Branch & Condition Coverage", // Phủ nhánh & điều kiện: appointment.DoctorId != parsedUserId
                     preCondition,
                     new { appointmentId = 502, loggedInDoctorId = 10, appointmentDoctorId = 20 },
                     expectedStatusCode,
@@ -572,6 +575,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Path Coverage", // Phủ đường: Đường thành công hoàn chỉnh (happy path)
                     preCondition,
                     new
                     {
@@ -725,6 +729,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Path Coverage", // Phủ đường: Đường xử lý lỗi email
                     preCondition,
                     new { appointmentId = 503, emailServiceAvailable = false },
                     expectedStatusCode,
@@ -838,6 +843,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Branch Coverage", // Phủ nhánh: AddMedicalRecord trả về null -> throw exception
                     preCondition,
                     new { appointmentId = 600, addMedicalRecordReturns = "null" },
                     expectedStatusCode,
@@ -952,6 +958,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Branch Coverage", // Phủ nhánh: AddMedicalRecordDetail trả về null -> throw exception
                     preCondition,
                     new { appointmentId = 601, addMedicalRecordDetailReturns = "null" },
                     expectedStatusCode,
@@ -1070,6 +1077,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Branch & Condition Coverage", // Phủ nhánh & điều kiện: GetPatientById trả về null với điều kiện patientId không tồn tại
                     preCondition,
                     new { appointmentId = 602, patientId = 999, patientExists = false },
                     expectedStatusCode,
@@ -1172,6 +1180,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Condition Coverage", // Phủ điều kiện: appointmentDate != today (ngày quá khứ)
                     preCondition,
                     new { appointmentId = 603, appointmentDate = DateTime.Now.Date.AddDays(-10).ToString("yyyy-MM-dd"), dayType = "past" },
                     expectedStatusCode,
@@ -1267,6 +1276,7 @@ namespace Server.Tests.Controllers.Prescription
                     testCaseId,
                     description,
                     branchCovered,
+                    "Path Coverage", // Phủ đường: Đường xử lý edge case với ID = 0
                     preCondition,
                     new { appointmentId = 0, inputType = "edge_case_zero" },
                     expectedStatusCode,

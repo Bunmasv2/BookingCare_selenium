@@ -162,7 +162,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK01";
             string methodTested = "Appointment";
-            string description = "Kiểm tra khi AppointmentForm null";
+            string description = "Kiểm tra khi bệnh nhân không điền form và gửi form";
             string branchCovered = "Line 49: if (appointmentForm == null) -> throw ErrorHandlingException(400)";
             string coverageType = "Branch Coverage";
             string preCondition = "Bệnh nhân đã đăng nhập, gửi form null";
@@ -252,7 +252,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK02";
             string methodTested = "Appointment";
-            string description = "Kiểm tra khi Department rỗng - FAIL CASE";
+            string description = "Kiểm tra khi bệnh nhân không chọn chuyên khoa";
             string branchCovered = "Line 52: if (string.IsNullOrWhiteSpace(appointmentForm.Department)) -> throw";
             string coverageType = "Branch Coverage";
             string preCondition = "Bệnh nhân đã đăng nhập, form thiếu Department";
@@ -338,7 +338,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK03";
             string methodTested = "Appointment";
-            string description = "Kiểm tra điều kiện Symptoms quá dài (>500 ký tự)";
+            string description = "Kiểm tra điều kiện triệu chứng quá dài (>500 ký tự)";
             string branchCovered = "Line 67: if (!IsNullOrWhiteSpace(Symptoms) && Symptoms.Count() > 500) -> throw";
             string coverageType = "Condition Coverage";
             string preCondition = "Bệnh nhân đã đăng nhập, Symptoms có 501 ký tự";
@@ -423,7 +423,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK04";
             string methodTested = "Appointment";
-            string description = "Kiểm tra khi Specialty không tồn tại trong database - FAIL CASE";
+            string description = "Kiểm tra khi không tìm thấy chuyên khoa";
             string branchCovered = "Line 74: GetSpecialty(Department) ?? throw ErrorHandlingException(404)";
             string coverageType = "Path Coverage";
             string preCondition = "Bệnh nhân đã đăng nhập, form hợp lệ, Specialty không tồn tại";
@@ -632,7 +632,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK06";
             string methodTested = "Appointment";
-            string description = "Kiểm tra ngày đặt lịch quá xa (diffDays > 15) - FAIL CASE";
+            string description = "Kiểm tra ngày đặt lịch quá xa (diffDays > 15)E";
             string branchCovered = "Line 97: if (diffDays > 15) -> throw ErrorHandlingException(400)";
             string coverageType = "Branch Coverage";
             string preCondition = "Bệnh nhân đã đăng nhập, ngày đặt > 15 ngày so với hôm nay";
@@ -730,7 +730,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK07";
             string methodTested = "Appointment";
-            string description = "Kiểm tra khi đã có lịch hẹn chưa hoàn thành";
+            string description = "Kiểm tra khi có lịch hẹn chưa hoàn thành";
             string branchCovered = "Line 104-112: if (isExistAppointment != null) -> throw ErrorHandlingException(400)";
             string coverageType = "Path Coverage";
             string preCondition = "Bệnh nhân đã đăng nhập, đã có lịch hẹn chưa hoàn thành";
@@ -834,7 +834,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK08";
             string methodTested = "Appointment";
-            string description = "Kiểm tra khi slot đã đầy (>15 lịch hẹn) - trả về các slot khả dụng";
+            string description = "Kiểm tra khi slot đã đầy (>15 lịch hẹn)";
             string branchCovered = "Line 119-128: if (quantityAppointment > 15) -> return Ok(availableAppointments)";
             string coverageType = "Branch Coverage";
             string preCondition = "Bệnh nhân đã đăng nhập, slot đã có 16+ lịch hẹn";
@@ -961,7 +961,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK09";
             string methodTested = "Appointment";
-            string description = "Đặt lịch thành công - Full Path Coverage";
+            string description = "Đặt lịch thành công";
             string branchCovered = "Line 130-139: All validations pass -> Appointment() -> return Ok('Đặt lịch thành công!')";
             string coverageType = "Path Coverage (Happy Path)";
             string preCondition = "Bệnh nhân đã đăng nhập, tất cả dữ liệu hợp lệ, slot còn trống";
@@ -1094,7 +1094,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             // Test metadata
             string testCaseId = "DLK10";
             string methodTested = "UpdateAppointmentStatus";
-            string description = "Kiểm tra bác sĩ không có quyền cập nhật status khác 'Đã khám' - FAIL CASE";
+            string description = "Kiểm tra bác sĩ không có quyền cập nhật status khác 'Đã khám'";
             string branchCovered = "Line 185-189: if (role == 'doctor' && status != 'Đã khám') -> throw 403";
             string coverageType = "Branch & Condition Coverage";
             string preCondition = "Bác sĩ đã đăng nhập, cố cập nhật status thành 'Đã xác nhận'";

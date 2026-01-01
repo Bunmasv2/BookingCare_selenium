@@ -20,6 +20,7 @@ namespace Server.Tests.Helpers
             public string MethodTested { get; set; } = "AddMedicalRecord";
             public string Description { get; set; } = "";
             public string BranchCovered { get; set; } = "";
+            public string CoverageType { get; set; } = ""; // Loại phủ: Branch, Path, Condition, Branch & Condition
             public string PreCondition { get; set; } = "";
             public string InputData { get; set; } = "";
             public string ExpectedResult { get; set; } = ""; // Gom StatusCode + Response
@@ -52,6 +53,7 @@ namespace Server.Tests.Helpers
             string testCaseId,
             string description,
             string branchCovered,
+            string coverageType, // Loại phủ: "Branch Coverage", "Path Coverage", "Condition Coverage", "Branch & Condition Coverage"
             string preCondition,
             object inputData,
             int expectedStatusCode,
@@ -100,6 +102,7 @@ namespace Server.Tests.Helpers
             LogToConsole($"📋 Test Case: {testCaseId}");
             LogToConsole($"📝 Description: {description}");
             LogToConsole($"🌿 Branch Covered: {branchCovered}");
+            LogToConsole($"� Coverage Type: {coverageType}");
             LogToConsole($"📥 Input: {inputJson.Substring(0, Math.Min(100, inputJson.Length))}...");
             LogToConsole($"🎯 Expected: {expectedResultJson}");
             LogToConsole($"📤 Actual: {actualResultJson}");
@@ -114,6 +117,7 @@ namespace Server.Tests.Helpers
                 MethodTested = "AddMedicalRecord",
                 Description = description,
                 BranchCovered = branchCovered,
+                CoverageType = coverageType,
                 PreCondition = preCondition,
                 InputData = inputJson,
                 ExpectedResult = expectedResultJson,
@@ -146,6 +150,7 @@ namespace Server.Tests.Helpers
                     "Method Tested",
                     "Description",
                     "Branch Covered",
+                    "Coverage Type",     // Loại phủ: Branch, Path, Condition, Branch & Condition
                     "PreCondition",
                     "Input Data (JSON)",
                     "Expected Result (JSON)",
@@ -177,15 +182,16 @@ namespace Server.Tests.Helpers
                     worksheet.Cell(row, 2).Value = result.MethodTested;
                     worksheet.Cell(row, 3).Value = result.Description;
                     worksheet.Cell(row, 4).Value = result.BranchCovered;
-                    worksheet.Cell(row, 5).Value = result.PreCondition;
-                    worksheet.Cell(row, 6).Value = result.InputData;
-                    worksheet.Cell(row, 7).Value = result.ExpectedResult;
-                    worksheet.Cell(row, 8).Value = result.ActualResult;
-                    worksheet.Cell(row, 9).Value = result.Status;
-                    worksheet.Cell(row, 10).Value = result.ExecutionTime;
+                    worksheet.Cell(row, 5).Value = result.CoverageType;
+                    worksheet.Cell(row, 6).Value = result.PreCondition;
+                    worksheet.Cell(row, 7).Value = result.InputData;
+                    worksheet.Cell(row, 8).Value = result.ExpectedResult;
+                    worksheet.Cell(row, 9).Value = result.ActualResult;
+                    worksheet.Cell(row, 10).Value = result.Status;
+                    worksheet.Cell(row, 11).Value = result.ExecutionTime;
 
                     // Style cho Status
-                    var statusCell = worksheet.Cell(row, 9);
+                    var statusCell = worksheet.Cell(row, 10);
                     if (result.Status == "PASS")
                     {
                         statusCell.Style.Font.FontColor = XLColor.Green;
@@ -213,12 +219,13 @@ namespace Server.Tests.Helpers
                 worksheet.Column(2).Width = 18;   // Method Tested
                 worksheet.Column(3).Width = 50;   // Description
                 worksheet.Column(4).Width = 45;   // Branch Covered
-                worksheet.Column(5).Width = 35;   // PreCondition
-                worksheet.Column(6).Width = 50;   // Input Data JSON
-                worksheet.Column(7).Width = 60;   // Expected Result JSON (gom StatusCode + Response)
-                worksheet.Column(8).Width = 60;   // Actual Result JSON (gom StatusCode + Response)
-                worksheet.Column(9).Width = 10;   // Status
-                worksheet.Column(10).Width = 15;  // Execution Time
+                worksheet.Column(5).Width = 25;   // Coverage Type (Branch, Path, Condition, Branch & Condition)
+                worksheet.Column(6).Width = 35;   // PreCondition
+                worksheet.Column(7).Width = 50;   // Input Data JSON
+                worksheet.Column(8).Width = 60;   // Expected Result JSON (gom StatusCode + Response)
+                worksheet.Column(9).Width = 60;   // Actual Result JSON (gom StatusCode + Response)
+                worksheet.Column(10).Width = 10;  // Status
+                worksheet.Column(11).Width = 15;  // Execution Time
 
                 // Freeze header row
                 worksheet.SheetView.FreezeRows(1);
