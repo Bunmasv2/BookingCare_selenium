@@ -9,7 +9,16 @@ public class TestBase
     [SetUp]
     public void Setup()
     {
-        driver = new ChromeDriver();
+        var options = new ChromeOptions();
+
+        options.AddUserProfilePreference("profile.password_manager_leak_detection", false);
+        options.AddUserProfilePreference("credentials_enable_service", false);
+        options.AddUserProfilePreference("profile.password_manager_enabled", false);
+        options.AddArgument("--disable-notifications");
+        options.AddArgument("--disable-popup-blocking");
+
+        driver = new ChromeDriver(options);
+        driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         driver.Manage().Window.Maximize();
     }
 

@@ -11,6 +11,7 @@ namespace server.DTO
         public string? email { get; set; }
 
         [Required(ErrorMessage = "Họ và tên không được để trống!")]
+        [RegularExpression(@"^[a-zA-ZÀ-ỹ\s]+$", ErrorMessage = "Họ và tên không được chứa ký tự đặc biệt!")]
         public string? fullname { get; set; }
 
         [Required(ErrorMessage = "mật khẩu đăng ký không được để trống!")]

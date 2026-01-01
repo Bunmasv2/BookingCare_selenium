@@ -47,15 +47,31 @@ const ValideFormProvider = ({ children }) => {
                 errors[key] = `Vui lòng nhập ${fieldNames[key] || key}`
             }
         })
-        
-        // Kiểm tra định dạng email
-        if (formData.email && !errors.email) {
-            const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail.com/
-            if (!emailRegex.test(formData.email)) {
-                errors.email = "Email không đúng định dạng"
+
+        //Kiểm tra họ và tên
+        if (formData.fullname && !errors.fullname) {
+            const nameRegex = /^[a-zA-ZÀ-ỹ\s]+$/
+            if (!nameRegex.test(formData.fullname)) {
+                errors.fullname = "Họ và tên không được chứa ký tự đặc biệt"
             }
         }
         
+        // Kiểm tra định dạng email
+        if (formData.email && !errors.email) {
+            const spaceAfterAtRegex = /^[^@\s]+@[^@\s]+$/;
+
+            if (!spaceAfterAtRegex.test(formData.email)) {
+                errors.email = "Phần đứng sau '@' không được chứa khoảng trắng!";
+            }
+            else {
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+                if (!emailRegex.test(formData.email)) {
+                    errors.email = "Email không đúng định dạng";
+                }
+            }
+        }
+
         // Kiểm tra số điện thoại
         if (formData.phone && !errors.phone) {
             const phoneRegex = /^[0-9]{10,11}$/
