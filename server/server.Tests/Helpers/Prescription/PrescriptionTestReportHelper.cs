@@ -81,9 +81,9 @@ namespace Server.Tests.Helpers
             LogToConsole($"📋 Test Case: {id}");
             LogToConsole($"📝 Mô tả: {description}");
             LogToConsole($"🎯 Expected: {expectedOutput}");
-            LogToConsole($"📤 Actual: {actualOutput}");
+            LogToConsole($"� Actual: {actualOutput}");
             LogToConsole($"🧪 Test Assertion: {(testPassed ? "✅ PASSED" : "❌ FAILED")}");
-            LogToConsole($"🔄 Expected vs Actual Match: {(isMatch ? "✅ MATCH" : "❌ NO MATCH")}");
+            LogToConsole($"� Expected vs Actual Match: {(isMatch ? "✅ MATCH" : "❌ NO MATCH")}");
             LogToConsole($"📊 Final Result: {(finalPassed ? "✅ PASS" : "❌ FAIL")}");
             LogToConsole($"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
