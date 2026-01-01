@@ -66,6 +66,9 @@ namespace server.Controllers
             if (string.IsNullOrWhiteSpace(appointmentForm.AppointmentTime))
                 throw new ErrorHandlingException(400, "Vui lòng chọn buổi khám");
 
+            if (string.IsNullOrWhiteSpace(appointmentForm.Symptoms))
+                throw new ErrorHandlingException(400, "Vui lòng mô tả triệu chứng");
+
             if (!string.IsNullOrWhiteSpace(appointmentForm.Symptoms) && appointmentForm.Symptoms.Count() > 500)
                 throw new ErrorHandlingException(400, "Triệu chứng quá dài");
 
@@ -117,9 +120,13 @@ namespace server.Controllers
                 var dateOnly =
                     DateOnly.FromDateTime(isExistAppointment.AppointmentDate!.Value);
 
+                // throw new ErrorHandlingException(
+                //     400,
+                //     $"Bạn chưa hoàn thành lịch hẹn {dateOnly} {isExistAppointment.AppointmentTime}"
+                // );
                 throw new ErrorHandlingException(
                     400,
-                    $"Bạn chưa hoàn thành lịch hẹn {dateOnly} {isExistAppointment.AppointmentTime}"
+                    $"Bạn chưa hoàn thành lịch hẹn trước đó"
                 );
             }
 
@@ -330,7 +337,8 @@ namespace server.Controllers
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             int parsedUserId = Convert.ToInt32(userId);
 
-            var doctor = await _doctorService.GetDoctorById(parsedUserId) ?? throw new ErrorHandlingException("Không tìm thấy bác sĩ!");
+            var doctor = await _doctorService.GetDoctorById(parsedUserId)
+                ?? throw new ErrorHandlingException("Không tìm thấy bác sĩ!");
 
             var schedules = await _appointmentService.GetDoctorScheduleDetail(doctor.DoctorId, date, time);
 

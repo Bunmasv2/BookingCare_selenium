@@ -244,7 +244,7 @@ public class AppointmentTests : TestBase
 
         FillValidBaseForm(page);
         page.SelectDate("2020-01-01");
-
+        
         page.Submit();
 
         string message = HandleAlert();
