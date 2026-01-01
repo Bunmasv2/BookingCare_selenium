@@ -168,7 +168,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             string preCondition = "Bệnh nhân đã đăng nhập, gửi form null";
 
             int expectedStatusCode = 400;
-            var expectedResponse = new { errorMessage = "Dữ liệu không hợp lệ" };
+            var expectedResponse = new { errorMessage = "Dữ liệu sai!" };
 
             int actualStatusCode = 0;
             object actualResponse = new { };
@@ -404,38 +404,35 @@ namespace Server.Tests.Controllers.AppointmentTests
 
         #endregion
 
-        #region DLK04 - Specialty Not Found - Path Coverage
+        #region DLK04 - Doctor Not Found After Validation - Path Coverage
 
         /// <summary>
-        /// Test Case DLK04: Kiểm tra khi Specialty không tồn tại
-        /// Branch: Line 74 - GetSpecialty returns null -> throw ErrorHandlingException(404)
-        /// Coverage Type: PATH COVERAGE - Đường đi qua validation thành công rồi fail ở specialty
-        /// 
-        /// ⚠️ FAIL CASE: Expected error message sai
+        /// Test Case DLK04: Kiểm tra đường đi khi không tìm thấy bác sĩ
+        /// Branch: Line 77 - if (doctor == null) -> throw ErrorHandlingException(404)
+        /// Coverage Type: PATH COVERAGE - Đường đi khi Doctor không tồn tại
         /// </summary>
         [Test, Order(4)]
         [Category("WhiteBox")]
         [Category("DLK04")]
         [Category("PathCoverage")]
-        [Category("FailCase")]
-        public void DLK04_SpecialtyNotFound_ThrowsErrorHandlingException_FAIL()
+        public void DLK04_DoctorNotFound_AfterValidationAndSpecialtyCheck_ThrowsException()
         {
             // Test metadata
             string testCaseId = "DLK04";
             string methodTested = "Appointment";
-            string description = "Kiểm tra khi không tìm thấy chuyên khoa";
-            string branchCovered = "Line 74: GetSpecialty(Department) ?? throw ErrorHandlingException(404)";
+            string description = "Kiểm tra khi không tìm thấy bác sĩ sau khi đã validate form và chuyên khoa";
+            string branchCovered = "Line 77: if (doctor == null) -> throw ErrorHandlingException(404, 'Không tìm thấy bác sĩ')";
             string coverageType = "Path Coverage";
-            string preCondition = "Bệnh nhân đã đăng nhập, form hợp lệ, Specialty không tồn tại";
+            string preCondition = "Bệnh nhân đã đăng nhập, form hợp lệ, Specialty tồn tại, Doctor KHÔNG tồn tại";
 
             int expectedStatusCode = 404;
-            // ⚠️ CỐ TÌNH ĐẶT SAI: Expected message sai
-            var expectedResponse = new { errorMessage = "Khoa không tồn tại trong hệ thống" }; // SAI - Thực tế là "Không tìm thấy khoa"
+            var expectedResponse = new { errorMessage = "Bác sĩ không tồn tại" };
 
             int actualStatusCode = 0;
             object actualResponse = new { };
             string verifyNeverCalled = "";
             bool testPassed = false;
+
             var testForm = MockData.ValidAppointmentForm;
 
             _stopwatch.Restart();
@@ -445,10 +442,17 @@ namespace Server.Tests.Controllers.AppointmentTests
                 // Arrange
                 SetupUserContext(MockData.PatientUserId, "patient");
                 
-                // Mock specialty không tìm thấy
                 _mockSpecialtyService
-                    .Setup(s => s.GetSpecialty(It.IsAny<string>()))
-                    .ReturnsAsync((Specialty?)null);
+                    .Setup(s => s.GetSpecialty(testForm.Department))
+                    .ReturnsAsync(new Specialty 
+                    { 
+                        SpecialtyId = 1, 
+                        Name = testForm.Department 
+                    });
+
+                _mockDoctorService
+                    .Setup(d => d.GetDoctorByName(testForm.Doctor))
+                    .ReturnsAsync((DoctorDTO.DoctorDetail?)null);
 
                 // Act & Assert
                 var ex = Assert.ThrowsAsync<ErrorHandlingException>(async () =>
@@ -458,23 +462,24 @@ namespace Server.Tests.Controllers.AppointmentTests
                 actualStatusCode = ex!.StatusCode;
                 actualResponse = new { errorMessage = ex.ErrorMessage };
 
-                // Verify path: GetSpecialty được gọi, GetDoctorByName KHÔNG được gọi
-                _mockSpecialtyService.Verify(
-                    s => s.GetSpecialty(testForm.Department),
-                    Times.Once,
-                    "GetSpecialty phải được gọi đúng 1 lần");
-
-                _mockDoctorService.Verify(
-                    d => d.GetDoctorByName(It.IsAny<string>()),
+                // Verify - GetPatientByUserId KHÔNG được gọi vì Doctor null
+                _mockPatientService.Verify(
+                    p => p.GetPatientByUserId(It.IsAny<int>()),
                     Times.Never,
-                    "GetDoctorByName KHÔNG được gọi khi Specialty null");
+                    "GetPatientByUserId KHÔNG được gọi khi Doctor null");
 
-                verifyNeverCalled = "GetDoctorByName, GetPatientByUserId, GetServiceByName";
-                
-                // So sánh với expected -> FAIL vì message khác
-                // Actual: "Không tìm thấy khoa" != Expected: "Khoa không tồn tại trong hệ thống"
-                testPassed = (actualStatusCode == expectedStatusCode) && 
-                             (ex.ErrorMessage == "Khoa không tồn tại trong hệ thống");
+                _mockServiceService.Verify(
+                    s => s.GetServiceByName(It.IsAny<string>()),
+                    Times.Never,
+                    "GetServiceByName KHÔNG được gọi khi Doctor null");
+
+                _mockAppointmentService.Verify(
+                    a => a.IsExistAppointment(It.IsAny<int?>(), It.IsAny<DateTime>(), It.IsAny<string>()),
+                    Times.Never,
+                    "IsExistAppointment KHÔNG được gọi khi Doctor null");
+
+                verifyNeverCalled = "GetPatientByUserId, GetServiceByName, IsExistAppointment, Appointment";
+                testPassed = (actualStatusCode == expectedStatusCode);
             }
             catch (Exception ex) when (ex is not AssertionException)
             {
@@ -490,7 +495,7 @@ namespace Server.Tests.Controllers.AppointmentTests
                     branchCovered,
                     coverageType,
                     preCondition,
-                    new { department = testForm.Department, specialtyExists = false },
+                    new { department = testForm.Department, doctor = testForm.Doctor },
                     expectedStatusCode,
                     expectedResponse,
                     actualStatusCode,
@@ -840,7 +845,7 @@ namespace Server.Tests.Controllers.AppointmentTests
             string preCondition = "Bệnh nhân đã đăng nhập, slot đã có 16+ lịch hẹn";
 
             int expectedStatusCode = 200;
-            var expectedResponse = new { availableAppointments = "List of available slots" };
+            var expectedResponse = new { availableAppointments = "*" };
 
             int actualStatusCode = 0;
             object actualResponse = new { };

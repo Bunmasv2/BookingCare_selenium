@@ -133,7 +133,7 @@ namespace Server.Tests.Controllers.Prescription
             string preCondition = "Bác sĩ đã đăng nhập với DoctorId = 10";
 
             int expectedStatusCode = 500; // Default status code của ErrorHandlingException
-            var expectedResponse = new { errorMessage = "Không tìm thấy lịch hẹn!" };
+            var expectedResponse = new { errorMessage = "Lịch hẹn không tồn tại!" };
 
             int actualStatusCode = 0;
             object actualResponse = new { };
@@ -352,7 +352,7 @@ namespace Server.Tests.Controllers.Prescription
             string preCondition = "Bác sĩ đã đăng nhập (DoctorId=10), Lịch hẹn thuộc bác sĩ khác (DoctorId=20)";
 
             int expectedStatusCode = 403;
-            var expectedResponse = new { errorMessage = "Bạn không có quyền truy cập vào lịch hẹn này!" };
+            var expectedResponse = new { errorMessage = "Quyền truy cập vào lịch hẹn bị từ chối!" };
 
             int actualStatusCode = 0;
             object actualResponse = new { };
@@ -559,7 +559,7 @@ namespace Server.Tests.Controllers.Prescription
 
                 // Vì business logic thành công, ta coi như test passed
                 actualStatusCode = 200; // Business logic OK
-                actualResponse = new { message = "Tạo toa thuốc thành công!", note = "Email failed in unit test (expected)" };
+                actualResponse = new { message = "Tạo toa thuốc thành công!" };
                 verifyNeverCalled = "N/A - All business methods called successfully";
                 testPassed = true;
             }

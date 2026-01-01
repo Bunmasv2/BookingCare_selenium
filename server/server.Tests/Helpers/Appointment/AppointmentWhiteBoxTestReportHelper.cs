@@ -77,21 +77,28 @@ namespace Server.Tests.Helpers
             var expectedJson = JsonSerializer.Serialize(expectedResponse, jsonOptions);
             var actualJson = JsonSerializer.Serialize(actualResponse, jsonOptions);
 
-            // Kiểm tra pass/fail - status code phải khớp
+            // Kiểm tra pass/fail
+            // 1. Status code phải khớp chính xác
             bool statusMatch = expectedStatusCode == actualStatusCode;
             
-            // Response match: kiểm tra actual có chứa expected (cho phép thêm fields)
-            bool responseMatch = actualJson.Contains(expectedJson.TrimStart('{').TrimEnd('}').Split(',')[0].Trim('"'));
-            
-            // Nếu expected có wildcard (*), chỉ cần kiểm tra phần đầu
+            // 2. Response match - hỗ trợ 2 chế độ:
+            //    - Wildcard (*): Nếu expectedJson chứa "*", chỉ so sánh phần prefix trước dấu *
+            //    - Exact match: Nếu không có "*", so sánh chính xác từng ký tự
+            bool responseMatch;
             if (expectedJson.Contains("*"))
             {
-                var expectedPrefix = expectedJson.Split('*')[0].Replace("\"", "").Replace("{", "").Replace("errorMessage:", "").Trim();
-                responseMatch = actualJson.Contains(expectedPrefix);
+                // Wildcard mode: lấy phần trước dấu * và kiểm tra actual có bắt đầu bằng prefix đó không
+                var prefix = expectedJson.Split('*')[0];
+                responseMatch = actualJson.StartsWith(prefix, StringComparison.Ordinal);
+            }
+            else
+            {
+                // Exact match mode: so sánh chính xác từng ký tự
+                responseMatch = string.Equals(expectedJson, actualJson, StringComparison.Ordinal);
             }
             
-            // Final passed = test assertion passed VÀ status match
-            bool finalPassed = testPassed && statusMatch;
+            // Final passed = status code match VÀ response match
+            bool finalPassed = statusMatch && responseMatch;
             var status = finalPassed ? "PASS" : "FAIL";
 
             // Gom Expected và Actual thành object JSON
