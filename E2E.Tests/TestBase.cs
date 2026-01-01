@@ -18,6 +18,7 @@ public class TestBase
         options.AddArgument("--disable-popup-blocking");
 
         driver = new ChromeDriver(options);
+        // driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         driver.Manage().Window.Maximize();
     }
 

@@ -7,7 +7,7 @@ import axios from '../../Util/AxiosConfig'
 
 function SignIn({ setIsLogin, transferData, clearTransferData }) {
     const { login } = useContext(AuthContext)
-    const { validateForm, formErrors } = useContext(ValideFormContext)
+    const { validateForm, formErrors, validateField } = useContext(ValideFormContext)
     const [loginData, setLoginData] = useState({ email: "", password: "" })
     const [loading, setLoading] = useState(false)
     const [showSuccessMessage, setShowSuccessMessage] = useState(false)
@@ -62,27 +62,33 @@ function SignIn({ setIsLogin, transferData, clearTransferData }) {
                 </div>
             )}
             
-            <Form className="auth-form" onSubmit={handleLogin}>
+            <Form className="auth-form" onSubmit={handleLogin} noValidate>
                 <Form.Control
                     type="email"
+                    id="emailLogin"
                     name="email"
                     placeholder="Email"
                     value={loginData.email}
-                    onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setLoginData({ ...loginData, email: value });
+                        // validateField("email", value);
+                    }}
                     isInvalid={!!formErrors.email}
                 />
-                <Form.Control.Feedback className="mb-3" type="invalid">{formErrors.email}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">{formErrors.email}</Form.Control.Feedback>
 
                 <Form.Control
                     type="password"
+                    id="passwordLogin"
                     placeholder="Mật khẩu"
                     value={loginData.password}
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
                     isInvalid={!!formErrors.password}
                 />
-                <Form.Control.Feedback className="mb-3" type="invalid">{formErrors.password}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">{formErrors.password}</Form.Control.Feedback>
 
-                <Button variant="primary" disabled={loading} type="submit">
+                <Button id="login-button" variant="primary" disabled={loading} type="submit">
                     {loading ? "Đang xử lý..." : "Đăng Nhập"}
                 </Button>
             </Form>
@@ -90,7 +96,7 @@ function SignIn({ setIsLogin, transferData, clearTransferData }) {
                 Quên mật khẩu?
             </p>
             <p>
-                Chưa có tài khoản? <Button variant="link" onClick={() => setIsLogin(false)}>Đăng ký</Button>
+                Chưa có tài khoản? <Button id="register" variant="link" onClick={() => setIsLogin(false)}>Đăng ký</Button>
             </p>
         </>
     )
