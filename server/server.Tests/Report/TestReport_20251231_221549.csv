@@ -1,0 +1,7 @@
+﻿Test Case Name;Input Data;Expected Result (JSON);Actual Result (JSON);Status
+Reg_Logic_EmailExists;Email: exist@gmail.com;{"StatusCode":400,"ErrorMessage":"Email đã tồn tại!"};{"StatusCode":400,"ErrorMessage":"Email đã tồn tại!"};PASS
+Reg_Logic_PhoneExists;Phone: 0987654321;{"StatusCode":400,"ErrorMessage":"Số điện thoại đã được sử dụng!"};{"StatusCode":400,"ErrorMessage":"Số điện thoại đã được sử dụng!"};PASS
+Reg_Logic_Success;Valid Input;{"message":"Đăng ký thành công!","user":"newuser@gmail.com"};{"message":"Đăng ký thành công!","user":"newuser@gmail.com"};PASS
+Reg_Val_EmailEmpty;Email: '';{"ErrorMessage":"Email không được để trống!"};{"ErrorMessage":"Email không được để trống!"};PASS
+Reg_Val_PassMismatch;Pass != Confirm;{"ErrorMessage":"mật khẩu xác nhận không khớp!"};{"ErrorMessage":"mật khẩu xác nhận không khớp!"};PASS
+Reg_Val_PassShort;Pass: '123';{"ErrorMessage":"mật khẩu đăng ký tối thiểu 6 ký tự!"};{"ErrorMessage":"mật khẩu đăng ký tối thiểu 6 ký tự!"};PASS
