@@ -2,6 +2,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using NUnit.Framework;
+using System.ComponentModel;
 
 [TestFixture]
 [Category("Appointment")]
@@ -58,6 +59,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_Appointment_Without_Login()
     {
         driver.Navigate().GoToUrl("http://localhost:3000/đặt%20lịch%20khám");
+
         var page = new AppointmentPage(driver);
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
 
@@ -89,6 +91,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_When_Department_Is_Missing()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         // page.SelectDoctor("TRẦN HỮU LỢI");
@@ -106,6 +109,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_When_Doctor_Is_Missing()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         new WebDriverWait(driver, TimeSpan.FromSeconds(8))
@@ -128,6 +132,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_When_Service_Is_Missing()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         new WebDriverWait(driver, TimeSpan.FromSeconds(8))
@@ -140,6 +145,7 @@ public class AppointmentTests : TestBase
 
         page.SelectDoctor("TRẦN HỮU LỢI");
         page.SelectTime("Sáng");
+
         page.SelectDate("2025-12-30");
         page.SelectSymptoms("Gần đây tôi thường xuyên cảm thấy mệt mỏi, uể oải dù không làm việc quá sức. Giấc ngủ không ổn định, khó ngủ và ngủ không sâu khiến tinh thần kém tỉnh táo. Tôi thỉnh thoảng bị đau đầu nhẹ, choáng váng khi đứng lên, ăn uống kém và dễ bị cảm cúm hơn trước. Do áp lực công việc kéo dài, tôi lo ngại sức khỏe tổng thể có vấn đề nên mong muốn được khám sức khỏe tổng quát để kiểm tra và tư vấn phù hợp.");
 
@@ -153,6 +159,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_When_Date_Is_Missing()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         FillValidBaseForm(page);
@@ -167,6 +174,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_When_Time_Is_Missing()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         new WebDriverWait(driver, TimeSpan.FromSeconds(8))
@@ -192,6 +200,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_When_Symptoms_Is_Missing()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         new WebDriverWait(driver, TimeSpan.FromSeconds(8))
@@ -204,7 +213,7 @@ public class AppointmentTests : TestBase
 
         page.SelectDoctor("TRẦN HỮU LỢI");
         page.SelectService("Khám tổng quát");
-        page.SelectDate("2025-12-30");
+        page.SelectDate("2025-12-31");
 
         page.Submit();
 
@@ -212,9 +221,11 @@ public class AppointmentTests : TestBase
         Assert.That(message.ToLower(), Does.Contain("buổi"));
     }
 
+    [Test]
     public void Cannot_Book_When_Symptoms_Too_Long()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         new WebDriverWait(driver, TimeSpan.FromSeconds(8))
@@ -240,11 +251,12 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_In_The_Past()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         FillValidBaseForm(page);
         page.SelectDate("2020-01-01");
-        
+
         page.Submit();
 
         string message = HandleAlert();
@@ -270,6 +282,7 @@ public class AppointmentTests : TestBase
     public void Cannot_Book_More_Than_15_Days()
     {
         PerformLogin();
+
         var page = new AppointmentPage(driver);
 
         FillValidBaseForm(page);

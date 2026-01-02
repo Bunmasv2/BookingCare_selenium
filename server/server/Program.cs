@@ -33,8 +33,6 @@ string connectionString =
     $"MultipleActiveResultSets={mars};TrustServerCertificate=True;";
 
 builder.Configuration["ConnectionStrings:DefaultConnection"] = connectionString;
-
-
 builder.Services.AddCorsPolicy();
 
 // Add services to the container.
