@@ -63,8 +63,39 @@ namespace Clinic_Management.Controllers
                 throw new ErrorHandlingException(403, "Bạn không có quyền truy cập vào lịch hẹn này!");
             }
 
-            if (prescriptionRequest.Medicines.Any(m => m.Dosage == 0.ToString()))
-                throw new ErrorHandlingException(400, "Liều dùng không được bằng 0");
+            if (string.IsNullOrWhiteSpace(prescriptionRequest.Diagnosis))
+                throw new ErrorHandlingException(400, "Vui lòng nhập thông tin chẩn đoán");
+
+            if (prescriptionRequest.Medicines.Any(m =>
+                !int.TryParse(m.Dosage, out var dosageValue) || dosageValue <= 0))
+            {
+                throw new ErrorHandlingException(
+                    400,
+                    "Liều dùng phải là số nguyên và lớn hơn 0"
+                );
+            }
+
+            if (prescriptionRequest.Medicines.Any(m =>
+                !int.TryParse(m.FrequencyPerDay, out var frequencyPerDayValue) || frequencyPerDayValue <= 0))
+            {
+                throw new ErrorHandlingException(
+                    400,
+                    "Số lần trên ngày phải là số nguyên và lớn hơn 0"
+                );
+            }
+
+            if (prescriptionRequest.Medicines.Any(m =>
+                !int.TryParse(m.DurationInDays, out var durationInDaysValue) || durationInDaysValue <= 0))
+            {
+                throw new ErrorHandlingException(
+                    400,
+                    "Số ngày uống phải là số nguyên và lớn hơn 0"
+                );
+            }
+
+
+            // if (string.IsNullOrWhiteSpace(prescriptionRequest.Notes))
+            //     throw new ErrorHandlingException(400, "Vui lòng nhập lưu ý bổ sung");
 
             TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
             DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
@@ -78,24 +109,24 @@ namespace Clinic_Management.Controllers
                 throw new ErrorHandlingException(400, "Chỉ được kê thuốc vào ngày khám!");
             }
 
-            if (appointment.AppointmentTime == "Sáng" && (hour < 7 || hour > 12) ||
-                appointment.AppointmentTime == "Chiều" && (hour < 13 || hour > 17))
-            {
-                throw new ErrorHandlingException(400, $"Hiện tại không nằm trong khung giờ kê thuốc cho buổi {appointment.AppointmentTime.ToLower()}. Vui lòng kê thuốc trong khoảng thời gian quy định.");
-            }
+            // if (appointment.AppointmentTime == "Sáng" && (hour < 7 || hour > 12) ||
+            //     appointment.AppointmentTime == "Chiều" && (hour < 13 || hour > 17))
+            // {
+            //     throw new ErrorHandlingException(400, $"Hiện tại không nằm trong khung giờ kê thuốc cho buổi {appointment.AppointmentTime.ToLower()}. Vui lòng kê thuốc trong khoảng thời gian quy định.");
+            // }
 
-            var record = await _medicalRecordService.AddMedicalRecord(appointmentId, prescriptionRequest)
-                ?? throw new ErrorHandlingException(400, "Lỗi khi tạo toa thuốc");
+            // var record = await _medicalRecordService.AddMedicalRecord(appointmentId, prescriptionRequest)
+            //     ?? throw new ErrorHandlingException(400, "Lỗi khi tạo toa thuốc");
 
-            var recordDetail = await _medicalRecordService.AddMedicalRecordDetail(record.RecordId, prescriptionRequest.Medicines)
-                ?? throw new ErrorHandlingException(400, "Lỗi khi tạo toa thuốc");
+            // var recordDetail = await _medicalRecordService.AddMedicalRecordDetail(record.RecordId, prescriptionRequest.Medicines)
+            //     ?? throw new ErrorHandlingException(400, "Lỗi khi tạo toa thuốc");
 
-            var patient = await _patientService.GetPatientById(appointment.PatientId.Value)
-                ?? throw new ErrorHandlingException(400, "Không tìm thấy bệnh nhân!");
+            // var patient = await _patientService.GetPatientById(appointment.PatientId.Value)
+            //     ?? throw new ErrorHandlingException(400, "Không tìm thấy bệnh nhân!");
 
-            await _appointmentService.UpdateStatus(appointment, "Đã khám");
+            // await _appointmentService.UpdateStatus(appointment, "Đã khám");
 
-            return Ok(new { message = "Tạo toa thuốc thành công!" });
+            return Ok(new { message = "Lưu đơn thuốc thành công" });
         }
 
         private async Task SendEmailForPatient(string Email, Appointment appointment, MedicalRecordDTO.PrescriptionRequest prescriptionRequest, int recordId)
