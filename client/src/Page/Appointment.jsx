@@ -18,7 +18,7 @@ function Appointment() {
     const [doctors, setDoctors] = useState([])
     const [services, setServices] = useState([])
 
-    const [suggestedAppointments, setSuggestedAppointments] = useState([])
+    // const [suggestedAppointments, setSuggestedAppointments] = useState([])
     const [showModal, setShowModal] = useState(false)
 
     const handleCloseModal = () => setShowModal(false)
@@ -73,12 +73,12 @@ function Appointment() {
 
             const response = await axios.post("/appointments", formData)
 
-            if (response.data?.availableAppointments) {
-                setSuggestedAppointments(response.data.availableAppointments)
-                setShowModal(true)
-            } else {
-                setSuggestedAppointments([])
-            }
+            // if (response.data?.availableAppointments) {
+            //     setSuggestedAppointments(response.data.availableAppointments)
+            //     setShowModal(true)
+            // } else {
+            //     setSuggestedAppointments([])
+            // }
 
         } catch (error) {
             console.log(error)
@@ -199,8 +199,7 @@ function Appointment() {
                 </Row>
             </div>
 
-            {/* MODAL LỊCH GỢI Ý */}
-            <Modal
+            {/* <Modal
                 id="suggested-appointments-modal"
                 show={showModal}
                 onHide={handleCloseModal}
@@ -222,7 +221,7 @@ function Appointment() {
                         Đóng
                     </Button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
         </Container>
     )
 }

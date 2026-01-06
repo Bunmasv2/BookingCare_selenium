@@ -66,8 +66,8 @@ namespace server.Controllers
             if (string.IsNullOrWhiteSpace(appointmentForm.AppointmentTime))
                 throw new ErrorHandlingException(400, "Vui lòng chọn buổi khám");
 
-            if (!string.IsNullOrWhiteSpace(appointmentForm.Symptoms) && appointmentForm.Symptoms.Count() > 500)
-                throw new ErrorHandlingException(400, "Triệu chứng quá dài");
+            // if (!string.IsNullOrWhiteSpace(appointmentForm.Symptoms) && appointmentForm.Symptoms.Count() > 500)
+            //     throw new ErrorHandlingException(400, "Triệu chứng quá dài");
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             int parsedUserId = Convert.ToInt32(userId);
@@ -130,16 +130,10 @@ namespace server.Controllers
                 );
 
             if (quantityAppointment > 15)
-            {
-                var availableAppointments =
-                    await _appointmentService.CheckAvailableAppointment(
-                        doctor.DoctorId,
-                        appointmentDate.Date,
-                        appointmentForm.AppointmentTime
-                    );
-
-                return Ok(new { availableAppointments });
-            }
+                throw new ErrorHandlingException(
+                    400, 
+                    "Bác sĩ đã đủ số lượng bệnh nhân trong ngày này, vui lòng chọn ngày hoặc khung giờ khác"
+                );
 
             await _appointmentService.Appointment(
                 patient.PatientId,
