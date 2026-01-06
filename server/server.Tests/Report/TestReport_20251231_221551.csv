@@ -1,0 +1,7 @@
+﻿Test Case Name;Input Data;Expected Result (JSON);Actual Result (JSON);Status
+Controller Login Success;Valid User;{"message":"Đăng nhập thành công!","userName":"abc","role":"Doctor"};{"message":"Đăng nhập thành công!","userName":"abc","role":"Doctor"};PASS
+Controller User Not Found;Email: notfound@gmail.com;{"StatusCode":400,"ErrorMessage":"Tài khoản không tồn tại!"};{"StatusCode":400,"ErrorMessage":"Tài khoản không tồn tại!"};PASS
+Controller Wrong Password;Pass: WrongPassword;{"StatusCode":400,"ErrorMessage":"Sai mật khẩu!"};{"StatusCode":400,"ErrorMessage":"Sai mật khẩu!"};PASS
+Validate Empty Email;Email: '';{"ErrorMessage":"Email Không được bỏ trống!"};{"ErrorMessage":"Email Is Required!"};FAIL
+Validate Invalid Email;Email: 'invalid-email';{"ErrorMessage":"Vui lòng nhập đúng định dạng!"};{"ErrorMessage":"Vui lòng nhập đúng định dạng!"};PASS
+Validate Empty Password;Pass: '';{"ErrorMessage":"Password Is Required!"};{"ErrorMessage":"Password Is Required!"};PASS
