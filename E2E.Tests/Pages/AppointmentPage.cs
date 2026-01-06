@@ -16,17 +16,12 @@ public class AppointmentPage
     public void SelectDropdownByText(string id, string text)
     {
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
-
         var selectElement = wait.Until(d =>
         {
             var element = d.FindElement(By.Id(id));
             var select = new SelectElement(element);
-
-            return select.Options.Any(o => o.Text.Trim() == text)
-                ? element
-                : null;
+            return select.Options.Any(o => o.Text.Trim() == text) ? element : null;
         });
-
         new SelectElement(selectElement).SelectByText(text);
     }
 
@@ -43,7 +38,13 @@ public class AppointmentPage
         => SelectDropdownByText("appointmentTime", value);
 
     public void SelectSymptoms(string value)
-        => SelectDropdownByText("symptoms", value);
+    {
+        var symptomsElement = wait.Until(ExpectedConditions.ElementIsVisible(By.Id("symptoms")));
+
+        // Clear existing text just in case, then type the new value
+        symptomsElement.Clear();
+        symptomsElement.SendKeys(value);
+    }
 
     public void SelectDate(string date)
     {

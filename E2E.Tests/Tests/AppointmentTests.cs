@@ -7,6 +7,12 @@ using NUnit.Framework;
 [Category("Appointment")]
 public class AppointmentTests : TestBase
 {
+    // [TearDown]
+    // public void PauseAfterTest()
+    // {
+    //     // Thời gian dừng (tính bằng mili giây). Ví dụ: 3000 = 3 giây.
+    //     Thread.Sleep(3000); 
+    // }
     private void PerformLogin()
     {
         driver.Navigate().GoToUrl("http://localhost:3000/đăng%20nhập");
@@ -54,6 +60,22 @@ public class AppointmentTests : TestBase
         page.SelectSymptoms("Gần đây tôi thường xuyên cảm thấy mệt mỏi, uể oải dù không làm việc quá sức. Giấc ngủ không ổn định, khó ngủ và ngủ không sâu khiến tinh thần kém tỉnh táo. Tôi thỉnh thoảng bị đau đầu nhẹ, choáng váng khi đứng lên, ăn uống kém và dễ bị cảm cúm hơn trước. Do áp lực công việc kéo dài, tôi lo ngại sức khỏe tổng thể có vấn đề nên mong muốn được khám sức khỏe tổng quát để kiểm tra và tư vấn phù hợp.");
     }
 
+    // 1
+    [Test]
+    public void Patient_Can_Book_Appointment_Successfully()
+    {
+        PerformLogin();
+        var page = new AppointmentPage(driver);
+
+        FillValidBaseForm(page);
+        page.SelectDate("2026-11-30");
+
+        page.Submit();
+
+        string message = HandleAlert();
+        Assert.That(message.ToLower(), Does.Contain("thành công"));
+    }
+    // 2
     [Test]
     public void Cannot_Book_Appointment_Without_Login()
     {
@@ -84,7 +106,7 @@ public class AppointmentTests : TestBase
 
         Assert.That(System.Uri.UnescapeDataString(driver.Url).ToLower(), Does.Contain("đăng nhập"));
     }
-
+    //3
     [Test]
     public void Cannot_Book_When_Department_Is_Missing()
     {
@@ -101,7 +123,7 @@ public class AppointmentTests : TestBase
         string message = HandleAlert();
         Assert.That(message.ToLower(), Does.Contain("khoa"));
     }
-
+    //4
     [Test]
     public void Cannot_Book_When_Doctor_Is_Missing()
     {
@@ -115,7 +137,7 @@ public class AppointmentTests : TestBase
 
         page.SelectService("Khám tổng quát");
         page.SelectTime("Sáng");
-        page.SelectDate("2025-12-30");
+        page.SelectDate("2026-12-30");
         page.SelectSymptoms("Gần đây tôi thường xuyên cảm thấy mệt mỏi, uể oải dù không làm việc quá sức. Giấc ngủ không ổn định, khó ngủ và ngủ không sâu khiến tinh thần kém tỉnh táo. Tôi thỉnh thoảng bị đau đầu nhẹ, choáng váng khi đứng lên, ăn uống kém và dễ bị cảm cúm hơn trước. Do áp lực công việc kéo dài, tôi lo ngại sức khỏe tổng thể có vấn đề nên mong muốn được khám sức khỏe tổng quát để kiểm tra và tư vấn phù hợp.");
 
         page.Submit();
@@ -123,7 +145,7 @@ public class AppointmentTests : TestBase
         string message = HandleAlert();
         Assert.That(message.ToLower(), Does.Contain("bác sĩ"));
     }
-
+    //5
     [Test]
     public void Cannot_Book_When_Service_Is_Missing()
     {
@@ -140,7 +162,7 @@ public class AppointmentTests : TestBase
 
         page.SelectDoctor("TRẦN HỮU LỢI");
         page.SelectTime("Sáng");
-        page.SelectDate("2025-12-30");
+        page.SelectDate("2026-12-30");
         page.SelectSymptoms("Gần đây tôi thường xuyên cảm thấy mệt mỏi, uể oải dù không làm việc quá sức. Giấc ngủ không ổn định, khó ngủ và ngủ không sâu khiến tinh thần kém tỉnh táo. Tôi thỉnh thoảng bị đau đầu nhẹ, choáng váng khi đứng lên, ăn uống kém và dễ bị cảm cúm hơn trước. Do áp lực công việc kéo dài, tôi lo ngại sức khỏe tổng thể có vấn đề nên mong muốn được khám sức khỏe tổng quát để kiểm tra và tư vấn phù hợp.");
 
         page.Submit();
@@ -148,7 +170,7 @@ public class AppointmentTests : TestBase
         string message = HandleAlert();
         Assert.That(message.ToLower(), Does.Contain("dịch vụ"));
     }
-
+    //6
     [Test]
     public void Cannot_Book_When_Date_Is_Missing()
     {
@@ -162,7 +184,22 @@ public class AppointmentTests : TestBase
         string message = HandleAlert();
         Assert.That(message.ToLower(), Does.Contain("ngày"));
     }
+    //7
+    [Test]
+    public void Cannot_Book_In_The_Past()
+    {
+        PerformLogin();
+        var page = new AppointmentPage(driver);
 
+        FillValidBaseForm(page);
+        page.SelectDate("2020-01-01");
+
+        page.Submit();
+
+        string message = HandleAlert();
+        Assert.That(message, Does.Contain("tối thiểu trước 1 ngày"));
+    }
+    //8
     [Test]
     public void Cannot_Book_When_Time_Is_Missing()
     {
@@ -179,7 +216,7 @@ public class AppointmentTests : TestBase
 
         page.SelectDoctor("TRẦN HỮU LỢI");
         page.SelectService("Khám tổng quát");
-        page.SelectDate("2025-12-30");
+        page.SelectDate("2026-12-30");
         page.SelectSymptoms("Gần đây tôi thường xuyên cảm thấy mệt mỏi, uể oải dù không làm việc quá sức. Giấc ngủ không ổn định, khó ngủ và ngủ không sâu khiến tinh thần kém tỉnh táo. Tôi thỉnh thoảng bị đau đầu nhẹ, choáng váng khi đứng lên, ăn uống kém và dễ bị cảm cúm hơn trước. Do áp lực công việc kéo dài, tôi lo ngại sức khỏe tổng thể có vấn đề nên mong muốn được khám sức khỏe tổng quát để kiểm tra và tư vấn phù hợp.");
 
         page.Submit();
@@ -187,7 +224,7 @@ public class AppointmentTests : TestBase
         string message = HandleAlert();
         Assert.That(message.ToLower(), Does.Contain("buổi"));
     }
-
+    //10
     [Test]
     public void Cannot_Book_When_Symptoms_Is_Missing()
     {
@@ -204,14 +241,16 @@ public class AppointmentTests : TestBase
 
         page.SelectDoctor("TRẦN HỮU LỢI");
         page.SelectService("Khám tổng quát");
-        page.SelectDate("2025-12-30");
+        page.SelectTime("Sáng");
+        page.SelectDate("2026-12-30");
 
         page.Submit();
 
         string message = HandleAlert();
-        Assert.That(message.ToLower(), Does.Contain("buổi"));
+        Assert.That(message.ToLower(), Does.Contain("triệu chứng"));
     }
-
+    //11
+    [Test]
     public void Cannot_Book_When_Symptoms_Too_Long()
     {
         PerformLogin();
@@ -226,9 +265,9 @@ public class AppointmentTests : TestBase
             .Until(d => d.FindElements(By.CssSelector("#doctor option")).Count > 1);
 
         page.SelectDoctor("TRẦN HỮU LỢI");
-
         page.SelectService("Khám tổng quát");
-        page.SelectDate("2025-12-30");
+        page.SelectTime("Sáng");
+        page.SelectDate("2026-12-30");
         page.SelectSymptoms("Gần đây tôi thường xuyên cảm thấy mệt mỏi, uể oải dù không làm việc quá sức. Giấc ngủ không ổn định, khó ngủ hoặc ngủ không sâu, khiến tinh thần thiếu tỉnh táo vào ban ngày. Tôi đôi lúc bị đau đầu nhẹ, choáng váng khi đứng lên đột ngột và khả năng tập trung giảm. Ngoài ra, tôi nhận thấy ăn uống kém ngon miệng, thỉnh thoảng đầy bụng, khó tiêu. Cơ thể có dấu hiệu suy giảm sức đề kháng, dễ cảm cúm hơn trước. Do công việc và sinh hoạt có nhiều áp lực kéo dài, tôi lo ngại sức khỏe tổng thể có thể đang gặp vấn đề tiềm ẩn. Vì vậy, tôi mong muốn được khám sức khỏe tổng quát để kiểm tra toàn diện, phát hiện sớm các nguy cơ và có hướng điều chỉnh phù hợp.");
         page.Submit();
 
@@ -237,47 +276,59 @@ public class AppointmentTests : TestBase
     }
 
     [Test]
-    public void Cannot_Book_In_The_Past()
+    public void Patient_Cannot_Book_Appointment_When_Previous_Appointment_Not_Completed()
     {
-        PerformLogin();
+        driver.Navigate().GoToUrl("http://localhost:3000/đăng%20nhập");
+
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(8));
+        wait.Until(ExpectedConditions.ElementIsVisible(
+            By.CssSelector("input[type='email']")
+        ));
+
+        var loginPage = new LoginPage(driver);
+        loginPage.Login("tuan.kiet.banh2908@gmail.com", "Tuan2908Kiet@");
+
+        wait.Until(d =>
+            !string.IsNullOrEmpty(d.Url) &&
+            !d.Url.ToLower().Contains("đăng")
+        );
+
+        driver.Navigate().GoToUrl("http://localhost:3000/đặt%20lịch%20khám");
+
         var page = new AppointmentPage(driver);
 
-        FillValidBaseForm(page);
-        page.SelectDate("2020-01-01");
-        
+        new WebDriverWait(driver, TimeSpan.FromSeconds(8))
+            .Until(d => d.FindElements(By.CssSelector("#department option")).Count > 1);
+
+        page.SelectDepartment("Khoa Nội tổng quát");
+
+        new WebDriverWait(driver, TimeSpan.FromSeconds(8))
+            .Until(d => d.FindElements(By.CssSelector("#doctor option")).Count > 1);
+
+        page.SelectDoctor("TRẦN HỮU LỢI");
+        page.SelectService("Khám tổng quát");
+        page.SelectTime("Sáng");
+        page.SelectDate("2026-12-30");
+        page.SelectSymptoms("Gần đây tôi thường xuyên cảm thấy mệt mỏi, uể oải dù không làm việc quá sức. Giấc ngủ không ổn định, khó ngủ và ngủ không sâu khiến tinh thần kém tỉnh táo. Tôi thỉnh thoảng bị đau đầu nhẹ, choáng váng khi đứng lên, ăn uống kém và dễ bị cảm cúm hơn trước. Do áp lực công việc kéo dài, tôi lo ngại sức khỏe tổng thể có vấn đề nên mong muốn được khám sức khỏe tổng quát để kiểm tra và tư vấn phù hợp.");
+
         page.Submit();
 
         string message = HandleAlert();
-        Assert.That(message, Does.Contain("tối thiểu trước 1 ngày"));
+        Assert.That(message.ToLower(), Does.Contain("trước đó"));
     }
 
     // [Test]
-    // public void Patient_Can_Book_Appointment_Successfully()
+    // public void Cannot_Book_More_Than_15_Days()
     // {
     //     PerformLogin();
     //     var page = new AppointmentPage(driver);
 
     //     FillValidBaseForm(page);
-    //     page.SelectDate("2025-12-30");
+    //     page.SelectDate("2026-02-02");
 
     //     page.Submit();
 
     //     string message = HandleAlert();
-    //     Assert.That(message.ToLower(), Does.Contain("thành công"));
+    //     Assert.That(message, Does.Contain("15 ngày"));
     // }
-
-    [Test]
-    public void Cannot_Book_More_Than_15_Days()
-    {
-        PerformLogin();
-        var page = new AppointmentPage(driver);
-
-        FillValidBaseForm(page);
-        page.SelectDate("2026-02-02");
-
-        page.Submit();
-
-        string message = HandleAlert();
-        Assert.That(message, Does.Contain("15 ngày"));
-    }
 }

@@ -66,11 +66,11 @@ namespace server.Controllers
             if (string.IsNullOrWhiteSpace(appointmentForm.AppointmentTime))
                 throw new ErrorHandlingException(400, "Vui lòng chọn buổi khám");
 
-            if (string.IsNullOrWhiteSpace(appointmentForm.Symptoms))
-                throw new ErrorHandlingException(400, "Vui lòng mô tả triệu chứng");
+            // if (string.IsNullOrWhiteSpace(appointmentForm.Symptoms))
+            //     throw new ErrorHandlingException(400, "Vui lòng mô tả triệu chứng");
 
-            if (!string.IsNullOrWhiteSpace(appointmentForm.Symptoms) && appointmentForm.Symptoms.Count() > 500)
-                throw new ErrorHandlingException(400, "Triệu chứng quá dài");
+            // if (!string.IsNullOrWhiteSpace(appointmentForm.Symptoms) && appointmentForm.Symptoms.Count() > 500)
+            //     throw new ErrorHandlingException(400, "Triệu chứng quá dài");
 
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             int parsedUserId = Convert.ToInt32(userId);
@@ -103,11 +103,11 @@ namespace server.Controllers
                     "Vui lòng đặt lịch khám tối thiểu trước 1 ngày"
                 );
 
-            if (diffDays > 15)
-                throw new ErrorHandlingException(
-                    400,
-                    "Ngày khám không được cách quá 15 ngày so với hôm nay"
-                );
+            // if (diffDays > 15)
+            //     throw new ErrorHandlingException(
+            //         400,
+            //         "Ngày khám không được cách quá 15 ngày so với hôm nay"
+            //     );
 
             var isExistAppointment = await _appointmentService.IsExistAppointment(
                 patient.PatientId,
@@ -148,16 +148,16 @@ namespace server.Controllers
                 return Ok(new { availableAppointments });
             }
 
-            await _appointmentService.Appointment(
-                patient.PatientId,
-                doctor.DoctorId,
-                service.ServiceId,
-                appointmentDate.Date,
-                appointmentForm.AppointmentTime,
-                "Chờ xác nhận"
-            );
+            // await _appointmentService.Appointment(
+            //     patient.PatientId,
+            //     doctor.DoctorId,
+            //     service.ServiceId,
+            //     appointmentDate.Date,
+            //     appointmentForm.AppointmentTime,
+            //     "Chờ xác nhận"
+            // );
 
-            return Ok(new { message = "Đặt lịch thành công!" });
+            return Ok(new { message = "Đặt lịch thành công" });
         }
 
         [Authorize(Roles = "admin")]

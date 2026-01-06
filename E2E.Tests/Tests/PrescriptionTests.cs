@@ -79,7 +79,7 @@ public class PrescriptionTests : TestBase
         wait.Until(ExpectedConditions.ElementIsVisible(By.ClassName("rbc-calendar")));
 
         // --- Logic tìm ngày khám ---
-        string targetDate = "2026-01-01";
+        string targetDate = "2026-12-30";
         string targetShift = "Sáng";
         string testId = $"shift-{targetDate}-{targetShift}";
         bool clicked = false;
@@ -110,7 +110,7 @@ public class PrescriptionTests : TestBase
         foreach (var row in rows)
         {
             var cells = row.FindElements(By.TagName("td"));
-            if (cells.Count >= 6 && cells[1].Text.Contains("Bành Kiệt") && cells[4].Text.Contains("Đã xác nhận"))
+            if (cells.Count >= 6 && cells[1].Text.Contains("btk") && cells[4].Text.Contains("Đã xác nhận"))
             {
                 prescribeBtn = cells[5].FindElement(By.TagName("button"));
                 break;
@@ -257,7 +257,7 @@ public class PrescriptionTests : TestBase
         Thread.Sleep(3000);
 
         var message = HandleAlert();
-        Assert.That(message.ToLower(), Does.Contain("bằng 0"));
+        Assert.That(message.ToLower(), Does.Contain("số nguyên và lớn hơn 0"));
     }
 
     //5
@@ -389,6 +389,7 @@ public class PrescriptionTests : TestBase
         Assert.That(message.ToLower(), Does.Contain("thành công"));
     }
 
+    //chạy riêng
     //9
     [Test]
     public void Cannot_Prescribe_When_Not_Today()

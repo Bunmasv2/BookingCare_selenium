@@ -104,10 +104,10 @@ namespace Clinic_Management.Controllers
             DateOnly appointmentDate = DateOnly.FromDateTime(appointment.AppointmentDate.Value);
             DateOnly today = DateOnly.FromDateTime(now);
 
-            if (appointmentDate != today)
-            {
-                throw new ErrorHandlingException(400, "Chỉ được kê thuốc vào ngày khám!");
-            }
+            // if (appointmentDate != today)
+            // {
+            //     throw new ErrorHandlingException(400, "Chỉ được kê thuốc vào ngày khám!");
+            // }
 
             // if (appointment.AppointmentTime == "Sáng" && (hour < 7 || hour > 12) ||
             //     appointment.AppointmentTime == "Chiều" && (hour < 13 || hour > 17))
